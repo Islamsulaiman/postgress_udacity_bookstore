@@ -1,7 +1,7 @@
 // // in this file we are trying to create four methods four the CRUD operations on the database
 
 //import the pool instance from database.ts
-import client from "../database";
+import client from '../database';
 
 //create a type for the response from the Book_handlers methods according to the database requirements
 export type Book = {
