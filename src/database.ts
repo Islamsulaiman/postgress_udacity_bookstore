@@ -7,7 +7,7 @@ const { DATABASE_HOST, POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD, ENV, POSTG
   process.env;
 
 
-let client;  
+let client : Pool;  
 console.log(ENV);
 
 if(ENV === 'test'){
@@ -17,9 +17,7 @@ if(ENV === 'test'){
     user: POSTGRES_USER_test,
     password: POSTGRES_PASSWORD,
 });
-}
-
-if(ENV === 'dev'){
+}else{
   client = new Pool({
     host: DATABASE_HOST,
     database: POSTGRES_DB,
