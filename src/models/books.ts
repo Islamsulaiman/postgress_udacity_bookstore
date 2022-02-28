@@ -45,7 +45,7 @@ export class Book_handlers {
     }
     // create insert sql to insert a row to the table
     // 'b' is an object containing all the query data
-    async insert ( b : Book ): Promise<Book>{
+    async create ( b : Book ): Promise<Book>{
         try {
             const conn = await client.connect();
             // add $1, $2 ... as a place holder for the actual values to insert 
