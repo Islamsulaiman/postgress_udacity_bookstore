@@ -25,7 +25,7 @@ let client: Pool;
 
 //create if-else statement to check the value of ENV variable from '.env', to check if we are going to use the test DB or the main DB
 
-// ENV === 'test' this meaans that the we are testing and using the test DB by running 'npm run test'
+// ENV === 'test' this means that the we are testing and using the test DB by running 'npm run test'
 if (ENV === 'test') {
   //make an instance from Pool to use it later with our models.
   client = new Pool({
