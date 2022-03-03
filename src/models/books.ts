@@ -5,6 +5,7 @@ import client from '../database';
 
 //create a type for the response from the Book_handlers class methods according to the database requirements and the table schema
 export type Book = {
+  //add ? after id to make it optional, because not all variable of type 'Users' will add 'id' because it's added automatically by the DB
   id?: number;
   title: string;
   total_pages: number;

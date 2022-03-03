@@ -10,13 +10,12 @@ dotenv.config();
 //import bcrypt package to be used i n hashing and comparing passwords with hashed ones
 import bcrypt from 'bcrypt';
 
-import express, {Request, Response} from 'express'
-
 //get the necessary vars from .env file for hashing;
 const {SALT_NO, BCRYPT_PASS} = process.env;
 
 export type Users = {
-    id : number,
+    //add ? after id to make it optional, because not all variable of type 'Users' will add 'id' because it's added automatically by the DB
+    id? : number,
     f_name : string,
     l_name : string,
     user_name : string,
@@ -84,7 +83,7 @@ export class Users_handler {
         }
     };
 
-    async authenticate(user_name: string, password :  string): Promise<Users | null>  {
+    async authenticate(user_name: string, password : string): Promise<Users | null>  {
         try {
             const conn = await client.connect();
             const sql = `SELECT password FROM users WHERE user_name = ($1);`

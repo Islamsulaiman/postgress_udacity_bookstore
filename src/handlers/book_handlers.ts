@@ -45,7 +45,16 @@ const destroy = async (req: Request, res: Response): Promise<void> => {
 //this route takes an argument id
 const create = async (req: Request, res: Response): Promise<void> => {
   try {
-    const result: object = await book.create(req.body.id);
+    //since create method from the class takes an object of type Books, we need to create an object with the same exact keys with values from req.body object, to be actually passed to create method so it will return to result variable.
+    const bookInfo : Book = {
+      title : req.body.title,
+      total_pages : req.body.total_pages,
+      author : req.body.author,
+      type : req.body.type,
+      summary : req.body.summary
+    }
+    //pass bookInfo object to create to invoke the method from model file to actually connect to DB.
+    const result = await book.create(bookInfo)
     res.json(result);
   } catch (error) {
     console.log(`Error from CREATE ${error}`);
