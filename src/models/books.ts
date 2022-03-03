@@ -80,7 +80,7 @@ export class Book_handlers {
     try {
       const conn = await client.connect();
       // here I'am placing the value with ($1, $2, $3 ....) to delete against injection attacks
-      const sql = `SELECT * FROM books WHERE id = ($1)`;
+      const sql = `SELECT * FROM books WHERE id = ($1);`;
       // I'am adding a second argument here to substitute the '?' from the sql query up
       const result = await conn.query(sql, [id]);
       conn.release();

@@ -23,7 +23,8 @@ const index = async (_req: Request, res: Response): Promise<void> => {
 //this route takes an argument id
 const show = async (req: Request, res: Response): Promise<void> => {
   try {
-    const result: object = await book.show(req.body.id);
+    const result: object = await book.show(parseInt(req.params.id));
+
     res.json(result);
   } catch (error) {
     console.log(`Error from SHOW ${error}`);
@@ -34,7 +35,7 @@ const show = async (req: Request, res: Response): Promise<void> => {
 //this route takes an argument id
 const destroy = async (req: Request, res: Response): Promise<void> => {
   try {
-    const result: object = await book.delete(req.body.id);
+    const result: object = await book.delete(parseInt(req.params.id));
     res.json(result);
   } catch (error) {
     console.log(`Error from DELETE ${error}`);
@@ -63,4 +64,10 @@ const create = async (req: Request, res: Response): Promise<void> => {
 
 export const index_route = (app: express.Application): void => {
   app.get('/book', index);
+  app.get('/showBook/:id', show);
+  app.delete('/deleteBook/:id', destroy);
+  // app.get('/book', create);
 };
+// export const show_route = (app: express.Application): void =>{
+//   app.get('/showBook:id', show);
+// }

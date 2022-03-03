@@ -60,6 +60,6 @@ const authenticateUser = async (req : Request, res: Response)=>{
 export const usersRoutes = (app: express.Application) => {
     app.get('/showAllBooks', indexUsers)
     app.get('/showOneUser/:id', showUsers)
-    app.delete('/deleteUser/:id', destroyUsers)
+    // app.delete('/deleteUser/:id', destroyUsers)
     // app.post('/createUser', createUsers)
 }
