@@ -66,8 +66,6 @@ export const index_route = (app: express.Application): void => {
   app.get('/book', index);
   app.get('/showBook/:id', show);
   app.delete('/deleteBook/:id', destroy);
-  // app.get('/book', create);
+  app.post('/createBook', create);
 };
-// export const show_route = (app: express.Application): void =>{
-//   app.get('/showBook:id', show);
-// }
+
