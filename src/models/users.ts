@@ -6,12 +6,15 @@ import client from "../database";
 import dotenv from 'dotenv'; 
 dotenv.config();
 
+//import jwt method to create JWT with it
+import jwt, { Secret } from 'jsonwebtoken';
+
 
 //import bcrypt package to be used i n hashing and comparing passwords with hashed ones
 import bcrypt from 'bcrypt';
 
 //get the necessary vars from .env file for hashing;
-const {SALT_NO, BCRYPT_PASS} = process.env;
+const {SALT_NO, BCRYPT_PASS, TOKEN_PASS} = process.env;
 
 export type Users = {
     //add ? after id to make it optional, because not all variable of type 'Users' will add 'id' because it's added automatically by the DB
@@ -66,10 +69,11 @@ export class Users_handler {
         }
     };
 
-    async create(u : Users) : Promise<Users> {
+    //make this function return string, because it returns a token
+    async create(u : Users): Promise<string> {
         try {
             const conn = await client.connect();
-            const sql = `INSERT INTO users(f_name, l_name, user_name, password, age) VALUES ($1, $2, $3, $4, $5) RETURNING *;`;
+            const sql = `INSERT INTO users(f_name, l_name, user_name, password, age) VALUES ($1, $2, $3, $4, $5) RETURNING user_name, password;`;
 
             //hash variable will contain the return of bcrypt.hashSync() which will be the final hashed password with salting too, and its not asynchronous.
             //bcrypt.hashSync(userInputPassword + bcryptPassFromEnvFile  ,  NoOfHashingRounds)
@@ -78,8 +82,12 @@ export class Users_handler {
             //in the variables use 'hash' instead of the user input password
             const result = await conn.query(sql, [u.f_name, u.l_name, u.user_name, hash, u.age]);
 
+            //This will return a token for this user, we can use it later to verify the user.
+            const token =  jwt.sign({user: result.rows[0]}, TOKEN_PASS as string);
+
             conn.release();
-            return result.rows[0];
+
+            return token;
         } catch (error) {
             throw new Error(`Error from Users table CREATE method : ${error}`)
         }
