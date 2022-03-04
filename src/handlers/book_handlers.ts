@@ -62,7 +62,7 @@ const create = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export const index_route = (app: express.Application): void => {
+export const books_route = (app: express.Application): void => {
   app.get('/book', index);
   app.get('/showBook/:id', show);
   app.delete('/deleteBook/:id', destroy);

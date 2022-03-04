@@ -24,7 +24,7 @@ export type Users = {
 }
 
 // const errorMethod = (methodName : string, error : unknown) =>{
-//      return new Error (`Error from Users table ${methodName} method : ${error as unknown as string}`);
+//      throw new Error (`Error from Users table, ${methodName} method : ${error as unknown as string}`);
 // }
 
 
@@ -65,17 +65,19 @@ export class Users_handler {
             throw new Error(`Error from Users table DELETE method : ${error}`)
         }
     };
-    //f_name : string, l_name :string, user_name : string, password : string, age : number
 
     async create(u : Users) : Promise<Users> {
         try {
             const conn = await client.connect();
-            const sql = `INSERT INTO users(f_name, l_name, user_name, password, age) VALUES ($1, $2, $3, $4, $5) RETURNING *;`
+            const sql = `INSERT INTO users(f_name, l_name, user_name, password, age) VALUES ($1, $2, $3, $4, $5) RETURNING *;`;
+
             //hash variable will contain the return of bcrypt.hashSync() which will be the final hashed password with salting too, and its not asynchronous.
             //bcrypt.hashSync(userInputPassword + bcryptPassFromEnvFile  ,  NoOfHashingRounds)
             const hash = bcrypt.hashSync(u.password + BCRYPT_PASS , parseInt(SALT_NO as string));
+
             //in the variables use 'hash' instead of the user input password
             const result = await conn.query(sql, [u.f_name, u.l_name, u.user_name, hash, u.age]);
+
             conn.release();
             return result.rows[0];
         } catch (error) {
@@ -83,6 +85,7 @@ export class Users_handler {
         }
     };
 
+    //"authenticate" method will take "user_name" and "password" then check 1)if the "user_name" is valid, 2)password  is matched with the hashed one inside the DB, 3)user_name and password is together. 
     async authenticate(user_name: string, password : string): Promise<Users | null>  {
         try {
             const conn = await client.connect();
@@ -90,14 +93,14 @@ export class Users_handler {
 
             const result = await conn.query(sql, [user_name]);
 
-            console.log(result.rows[0]);        //delete this row later
-
             if(result.rows.length){
+
+                const user = result.rows[0];
                 
-                const match = bcrypt.compareSync(password + BCRYPT_PASS  , result.rows[0]);
+                const match = bcrypt.compareSync(password + BCRYPT_PASS  , result.rows[0].password);
                 
                 if(match){
-                    return result.rows[0];
+                    return user.password;
                 }
             }
             return null;
