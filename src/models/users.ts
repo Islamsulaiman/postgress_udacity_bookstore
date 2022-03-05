@@ -26,9 +26,10 @@ export type Users = {
     age : number
 }
 
-// const errorMethod = (methodName : string, error : unknown) =>{
-//      throw new Error (`Error from Users table, ${methodName} method : ${error as unknown as string}`);
-// }
+//use this method for error handling instead of copy past at every line.
+const errorMethod = (methodName : string, error : unknown) =>{
+     return new Error (`Error from Users table, ${methodName} method : ${error as unknown as string}`);
+}
 
 
 export class Users_handler {
@@ -40,8 +41,8 @@ export class Users_handler {
             conn.release();
             return result.rows;
         } catch (error) {
-            throw new Error(`Error from Users table INDEX method : ${error}`)
-            // errorMethod('index', error)
+            // throw new Error(`Error from Users table INDEX method : ${error}`)
+            throw errorMethod('index', error)
         }
     }
 
@@ -53,7 +54,8 @@ export class Users_handler {
             conn.release();
             return result.rows[0];
         } catch (error) {
-            throw new Error(`Error from Users table SHOW method : ${error}`)
+            // throw new Error(`Error from Users table SHOW method : ${error}`)
+            throw errorMethod('SHOW', error)
         }
     }
 
