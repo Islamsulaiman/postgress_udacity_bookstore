@@ -6,7 +6,7 @@ import client from "../database";
 
 //import dotenv to use variable from .env file for hashing and salt, and grant access to process.env object
 import dotenv from 'dotenv'; 
-import { isEntityName } from "typescript";
+
 dotenv.config();
 
 //use this method for error handling instead of copy past at every line.
@@ -54,8 +54,37 @@ export class orders_handler {
         }
     }
 
+    async create(o : Orders) : Promise<Orders> {
+        try {
+            const conn = await client.connect();
+            const sql = `INSERT INTO orders (status, user_id) VALUES ($1, $2) RETURNING *;`
+            const result = await client.query(sql, [o.status, o.user_id]);
+            conn.release();
+            return result.rows[0];
+        } catch (error) {
+            throw errorMethod(error)
+        }
+    }
+
     //this method will add orders to orders_products table to create many to many relation between orders and products tables.
     async addOrder(quantity: number, order_id : number, product_id: number) : Promise<Orders_product>{
+        //add logic to check if the order is open first before adding to it 
+        try {
+            const conn = await client.connect();
+            const sql = `SELECT status FROM orders WHERE id = $1;`
+            const result = await conn.query(sql, [order_id])
+            const status = result.rows[0]
+            conn.release();
+            
+            //check if the is closed
+            if (status !== 'open'){
+                throw new Error (`Could not add product ${product_id} to order ${order_id} because order status is ${status}`)
+            }
+            
+        } catch (error) {
+            errorMethod(error)
+        }
+        //if the order is still open, then add product to it
         try {
             const conn = await client.connect();
             const sql = `INSERT INTO orders_products (quantity, order_id, product_id) VALUES ($1, $2, $3) RETURNING *;`;

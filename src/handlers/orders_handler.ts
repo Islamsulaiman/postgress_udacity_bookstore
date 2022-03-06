@@ -1,5 +1,5 @@
 // // this file will handle all of the orders methods to the target route
-import { orders_handler } from "../models/orders";
+import { Orders,orders_handler } from "../models/orders";
 
 const orders = new orders_handler();
 
@@ -10,20 +10,52 @@ const errorMethod = (error : unknown) =>{
      return new Error (`The Error is : ${error as unknown as string}`);
 }
 
+//show all orders in the DB, with their status
+const showAllOrders = async (_req: Request, res: Response) => {
+    try {
+        const result = await orders.index();
+        res.json(result);
+    } catch (error) {
+        throw errorMethod(error)
+    }
+}
+
+
+//to handle creating new orders for the user to add products to them later
+const createOrderHandler = async (req: Request, res: Response) =>{
+
+    const orderObject : Orders = {
+        status: req.body.status,
+        user_id : req.body.user_id
+    }
+
+    try {
+        const result = await orders.create(orderObject)
+        res.json(result);
+    } catch (error) {
+        throw errorMethod(error)
+    }
+}
+
 //to handle the adding new order functionality
-const addOrdersRoute = async (req: Request, res: Response) => {
-    const order_id : number = req.params.id as unknown as number;
+const addOrdersHandler = async (req: Request, res: Response) => {
+    const order_id : number = parseInt(req.params.id) ;
     const product_id : number = req.body.product_id;
     const quantity : number = req.body.quantity;
     try {
         const result = await orders.addOrder(quantity, order_id, product_id)
+        res.json(result);
     } catch (error) {
         throw errorMethod(error)
     }
 };
 
 
+
 export const ordersRoute = (app: express.Application) => {
-    app.post("/order/:id")
+    app.get('/order', showAllOrders)
+    app.post("/order", createOrderHandler)
+    app.post("/order/:id/product", addOrdersHandler)
+    
 }
 
