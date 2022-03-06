@@ -8,6 +8,11 @@ import client from "../database";
 import dotenv from 'dotenv'; 
 dotenv.config();
 
+//use this method for error handling instead of copy past at every line.
+const errorMethod = (error : unknown) =>{
+     return new Error (`The Error is : ${error as unknown as string}`);
+}
+
 //type for the response of "orders" table.
 export type Orders = {
     id? : number,

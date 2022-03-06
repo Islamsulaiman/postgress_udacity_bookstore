@@ -27,8 +27,8 @@ export type Users = {
 }
 
 //use this method for error handling instead of copy past at every line.
-const errorMethod = (methodName : string, error : unknown) =>{
-     return new Error (`Error from Users table, ${methodName} method : ${error as unknown as string}`);
+const errorMethod = ( error : unknown) =>{
+     return new Error (`The Error is : ${error as unknown as string}`);
 }
 
 
@@ -41,8 +41,7 @@ export class Users_handler {
             conn.release();
             return result.rows;
         } catch (error) {
-            // throw new Error(`Error from Users table INDEX method : ${error}`)
-            throw errorMethod('index', error)
+            throw errorMethod(error);
         }
     }
 
@@ -55,7 +54,7 @@ export class Users_handler {
             return result.rows[0];
         } catch (error) {
             // throw new Error(`Error from Users table SHOW method : ${error}`)
-            throw errorMethod('SHOW', error)
+            throw errorMethod(error);
         }
     }
 
@@ -67,7 +66,7 @@ export class Users_handler {
             conn.release();
             return result.rows[0];
         } catch (error) {
-            throw new Error(`Error from Users table DELETE method : ${error}`)
+            throw errorMethod(error);
         }
     };
 
@@ -91,7 +90,7 @@ export class Users_handler {
 
             return token;
         } catch (error) {
-            throw new Error(`Error from Users table CREATE method : ${error}`)
+            throw errorMethod(error);
         }
     };
 
@@ -115,7 +114,7 @@ export class Users_handler {
             }
             return null;
         } catch (error) {
-            throw new Error(`Error from Users table AUTHENTICATE method : ${error}`)
+            throw errorMethod(error);
         }
     }
 };

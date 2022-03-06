@@ -14,6 +14,12 @@ dotenv.config();
 //create an instance of Book_handlers class
 let book = new Book_handlers();
 
+
+//use this method for error handling instead of copy past at every line.
+const errorMethod = (error : unknown) =>{
+  return new Error (`The Error is : ${error as unknown as string}`);
+}
+
 //create a route for index() method;
 //this route takes an argument id
 const index = async (_req: Request, res: Response): Promise<void> => {
@@ -22,7 +28,8 @@ const index = async (_req: Request, res: Response): Promise<void> => {
     const result: object = await book.index();
     res.json(result);
   } catch (error) {
-    console.log(`Error from INDEX ${error}`);
+    // console.log(`Error from INDEX ${error}`);
+    throw errorMethod(error)
   }
 };
 
@@ -34,7 +41,7 @@ const show = async (req: Request, res: Response): Promise<void> => {
 
     res.json(result);
   } catch (error) {
-    console.log(`Error from SHOW ${error}`);
+    throw errorMethod(error);
   }
 };
 
@@ -53,7 +60,7 @@ const destroy = async (req: Request, res: Response): Promise<void> => {
     const result: object = await book.delete(parseInt(req.params.id));
     res.json(result);
   } catch (error) {
-    console.log(`Error from DELETE ${error}`);
+    throw errorMethod(error)
   }
 };
 
@@ -82,7 +89,7 @@ const create = async (req: Request, res: Response): Promise<void> => {
     const result = await book.create(bookInfo)
     res.json(result);
   } catch (error) {
-    console.log(`Error from CREATE ${error}`);
+    throw errorMethod(error);
   }
 };
 

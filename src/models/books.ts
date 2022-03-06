@@ -14,6 +14,12 @@ export type Book = {
   summary: string;
 };
 
+//use this method for error handling instead of copy past at every line.
+const errorMethod = (error : unknown) =>{
+     return new Error (`The Error is : ${error as unknown as string}`);
+}
+
+
 //create the sql class which will contain all the CRUD sql methods
 export class Book_handlers {
   //create method that read all the rows of DB
@@ -32,7 +38,7 @@ export class Book_handlers {
       return result.rows;
     } catch (error) {
       //we should use 'throw new Error()' as error handling
-      throw new Error(`The error is ${error}`);
+      throw errorMethod(error)
     }
   }
   // create delete sql to delete a row based on id;
@@ -48,7 +54,7 @@ export class Book_handlers {
       conn.release();
       return book;
     } catch (error) {
-      throw new Error(`The error is ${error}`);
+        throw errorMethod(error)
     }
   }
   // create insert sql to insert a row to the table
@@ -72,7 +78,7 @@ export class Book_handlers {
       conn.release();
       return book;
     } catch (error) {
-      throw new Error(`The error is ${error}`);
+      throw errorMethod(error);
     }
   }
   //create a methods to show a row based on id
@@ -87,7 +93,7 @@ export class Book_handlers {
       // result.rows will always return an array, even if I'am only returning one value it will return an array of one value, so I should index[0] to it.
       return result.rows[0];
     } catch (error) {
-      throw new Error(`The error is ${error}`);
+      throw errorMethod(error)
     }
   }
 }

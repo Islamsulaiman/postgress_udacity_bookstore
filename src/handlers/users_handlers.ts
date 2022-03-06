@@ -4,13 +4,20 @@ const user =new Users_handler();
 
 import express, {Request, Response} from 'express';
 
+
+//use this method for error handling instead of copy past at every line.
+const errorMethod = (error : unknown) =>{
+     return new Error (`The Error is : ${error as unknown as string}`);
+}
+
+
 //adding underscore before mandatory unused parameter, will make the console ignore it, which is what we want here.
 const indexUsers = async (_req : Request, res: Response)=>{
     try {
         const result = await user.index();
         res.json(result);
     } catch (error) {
-        throw new Error (`Error from user_handler file from indexUsers method : ${error}`)
+        throw errorMethod(error);
     }
 }
 
@@ -19,7 +26,7 @@ const showUsers = async (req : Request, res: Response) =>{
         const result = await user.show(parseInt(req.params.id));
         res.json(result);
     } catch (error) {
-        throw new Error (`Error from user_handler file from showUsers method : ${error}`)
+        throw errorMethod(error);
     }
 }
 
@@ -28,7 +35,7 @@ const destroyUsers = async (req : Request, res: Response) =>{
         const result = await user.destroy(parseInt(req.params.id));
         res.json(result);
     } catch (error) {
-        throw new Error (`Error from user_handler file from destroyUsers method : ${error}`)
+        throw errorMethod(error);
     }
 }
 
@@ -44,7 +51,7 @@ const createUsers = async(req : Request, res: Response) =>{
         const result = await user.create(userInfo);
         res.json(result);
     } catch (error) {
-        throw new Error (`Error from user_handler file from createUsers method : ${error}`)
+        throw errorMethod(error);
     }
 }
 
@@ -53,7 +60,7 @@ const authenticateUser = async (req : Request, res: Response)=>{
         const result = await user.authenticate(req.body.user_name, req.body.password)
         res.json(result);
     } catch (error) {
-        throw new Error (`Error from user_handler file from authenticateUser method : ${error}`)
+        throw errorMethod(error);
     }
 
 }
