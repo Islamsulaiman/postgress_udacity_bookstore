@@ -7,6 +7,9 @@ import { books_route } from './handlers/book_handlers';
 //import the routes for the users to connect to the DB with
 import { usersRoutes } from './handlers/users_handlers';
 
+//import the route to control orders.
+import { ordersRoute } from './handlers/orders_handler';
+
 
 const app: express.Application = express();
 
@@ -24,6 +27,9 @@ books_route(app);
 
 //to grant me access to the users table inside the DB
 usersRoutes(app);
+
+//to grant me access to orders and orders_products table
+ordersRoute(app);
 
 
 app.listen(3000, function () {
