@@ -55,6 +55,7 @@ const createUsers = async(req : Request, res: Response) =>{
     }
 }
 
+//authenticateUser method will return the hashed password if the user_name and the original password is correct as a checking on our values
 const authenticateUser = async (req : Request, res: Response)=>{
     try {
         const result = await user.authenticate(req.body.user_name, req.body.password)

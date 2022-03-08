@@ -4,6 +4,7 @@ import { Orders,orders_handler } from "../models/orders";
 const orders = new orders_handler();
 
 import express, {Request, Response} from "express";
+import client from "../database";
 
 //use this method for error handling instead of copy past at every line.
 const errorMethod = (error : unknown) =>{
@@ -14,6 +15,15 @@ const errorMethod = (error : unknown) =>{
 const showAllOrders = async (_req: Request, res: Response) => {
     try {
         const result = await orders.index();
+        res.json(result);
+    } catch (error) {
+        throw errorMethod(error)
+    }
+}
+
+const showOneOrder = async(req: Request, res: Response) =>{
+    try {
+        const result = await orders.show(parseInt(req.params.id));
         res.json(result);
     } catch (error) {
         throw errorMethod(error)
@@ -33,12 +43,13 @@ const createOrderHandler = async (req: Request, res: Response) =>{
         const result = await orders.create(orderObject)
         res.json(result);
     } catch (error) {
-        throw errorMethod(error)
+        // throw errorMethod(error)
+        res.send(error)
     }
 }
 
 //to handle the adding new order functionality
-const addOrdersHandler = async (req: Request, res: Response) => {
+const addProductToOrder = async (req: Request, res: Response) => {
     const order_id : number = parseInt(req.params.id) ;
     const product_id : number = req.body.product_id;
     const quantity : number = req.body.quantity;
@@ -54,8 +65,9 @@ const addOrdersHandler = async (req: Request, res: Response) => {
 
 export const ordersRoute = (app: express.Application) => {
     app.get('/order', showAllOrders)
-    app.post("/order", createOrderHandler)
-    app.post("/order/:id/product", addOrdersHandler)
+    app.get('/oneOrder/:id', showOneOrder)
+    app.post("/createOrder", createOrderHandler)
+    app.post("/order/:id/product", addProductToOrder)
     
 }
 

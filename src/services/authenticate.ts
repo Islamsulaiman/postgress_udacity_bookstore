@@ -9,7 +9,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 //'auth' is a middleware that requires token from the user to invoke certain sensitive routes that 
-export const auth = (methodName: string, req: Request, res: Response, next: Function)=>{
+export const auth = ( req: Request, res: Response, next: Function)=>{
     try {
       jwt.verify(req.body.token, process.env.TOKEN_PASS as string);
 
@@ -19,6 +19,6 @@ export const auth = (methodName: string, req: Request, res: Response, next: Func
       //401 for unauthorized
       res.status(401)
       //give the user feedback on the problem
-      res.send(`you are not authorized to ${methodName} a book, sign in first!.`)
+      res.send(`you are not authorized!! sign in first, then provide your token..`)
     }
 }

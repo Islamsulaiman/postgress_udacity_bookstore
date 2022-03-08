@@ -106,7 +106,7 @@ const allProductsByCategory = async (_req: Request, res: Response)=>{
 
 export const products_route = (app: express.Application): void => {
   app.get('/allProducts', index);
-  app.get('allProductsByCategory', allProductsByCategory);
+  app.get('/allProductsByCategory', allProductsByCategory);
   app.get('/showProduct/:id', show);
   app.delete('/deleteProduct/:id', auth, destroy);  //authenticate sensitive route
   app.post('/createProduct', auth, create);         //authenticate sensitive route

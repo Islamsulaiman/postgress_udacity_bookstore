@@ -44,7 +44,7 @@ export class Product_handlers {
     try {
       const conn = await client.connect();
       //we are using '$1, $2 ... ' as a place holder to prevent injection attack.
-      const sql = `DELETE FROM product WHERE id = ($1) RETURNING *`;
+      const sql = `DELETE FROM product WHERE id = ($1) RETURNING *;`;
       // add second argument to '.query()' which is an array of the placeholders in our query chronologically ordered.
       const result = await conn.query(sql, [id]);
       //our query will return an array with only one object as an element with the specified 'id', so we are indexing this one object into 'book' variable.
@@ -99,7 +99,7 @@ export class Product_handlers {
         const sql = `SELECT * FROM product ORDER BY category;`;
         const result = await conn.query(sql);
         conn.release();
-        return result.rows
+        return result.rows;
     } catch (error) {
       throw errorMethod(error)
     }
