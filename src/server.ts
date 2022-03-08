@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
 
 //import route handlers
-import { books_route } from './handlers/book_handlers';
+import { products_route } from './handlers/product_handlers';
 
 //import the routes for the users to connect to the DB with
 import { usersRoutes } from './handlers/users_handlers';
@@ -23,7 +23,7 @@ app.get('/', function (req: Request, res: Response) {
 });
 
 //to grant me access to the books table inside the DB
-books_route(app);
+products_route(app);
 
 //to grant me access to the users table inside the DB
 usersRoutes(app);
