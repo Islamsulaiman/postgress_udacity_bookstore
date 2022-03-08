@@ -2,15 +2,15 @@
   "dev": {
     "driver": "pg",
     "host": "127.0.0.1",
-    "database": "full_stack_dev",
-    "user": "full_stack_user",
+    "database": "shopping",
+    "user": "shopping_user",
     "password": "password123"
   },
   "test": {
     "driver": "pg",
     "host": "127.0.0.1",
-    "database": "full_stack_dev_test",
-    "user": "full_stack_user_test",
+    "database": "shopping_test",
+    "user": "shopping_user_test",
     "password": "password123"
   }
 }
