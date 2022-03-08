@@ -4,7 +4,6 @@ import { Orders,orders_handler } from "../models/orders";
 const orders = new orders_handler();
 
 import express, {Request, Response} from "express";
-import client from "../database";
 
 //use this method for error handling instead of copy past at every line.
 const errorMethod = (error : unknown) =>{
@@ -57,7 +56,8 @@ const addProductToOrder = async (req: Request, res: Response) => {
         const result = await orders.addOrder(quantity, order_id, product_id)
         res.json(result);
     } catch (error) {
-        throw errorMethod(error)
+        // throw errorMethod(error)
+        res.send('please make sure that product is available and the order is open !!')
     }
 };
 

@@ -4,6 +4,8 @@ const user =new Users_handler();
 
 import express, {Request, Response} from 'express';
 
+//import authentication method for restricted routes
+import { auth } from "../services/authenticate";
 
 //use this method for error handling instead of copy past at every line.
 const errorMethod = (error : unknown) =>{
@@ -67,9 +69,9 @@ const authenticateUser = async (req : Request, res: Response)=>{
 }
 
 export const usersRoutes = (app: express.Application) => {
-    app.get('/showAllUsers', indexUsers)
-    app.get('/showOneUser/:id', showUsers)
-    app.delete('/deleteUser/:id', destroyUsers)
-    app.post('/createUser', createUsers)
-    app.get('/auth', authenticateUser)
+    app.get('/showAllUsers',auth , indexUsers)
+    app.get('/showOneUser/:id',auth , showUsers)
+    app.delete('/deleteUser/:id',auth , destroyUsers)
+    app.post('/createUser',auth , createUsers)
+    app.get('/auth',auth , authenticateUser)
 }
