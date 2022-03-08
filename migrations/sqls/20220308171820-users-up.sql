@@ -5,4 +5,4 @@ CREATE TABLE users(
     user_name VARCHAR(50),
     password text,
     age INTEGER
-)
+);
