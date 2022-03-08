@@ -1,6 +1,9 @@
 //import SQL methods class to destructure it later and the type
 import { Product, Product_handlers } from '../models/product';
 
+//import auth middleware, to authenticate user using tokens before invoking certain sensitive routes
+import { auth } from '../services/authenticate';
+
 //import express;
 import express, { Request, Response } from 'express';
 
@@ -105,7 +108,7 @@ export const products_route = (app: express.Application): void => {
   app.get('/allProducts', index);
   app.get('allProductsByCategory', allProductsByCategory);
   app.get('/showProduct/:id', show);
-  app.delete('/deleteProduct/:id', destroy);
-  app.post('/createProduct', create);
+  app.delete('/deleteProduct/:id', auth, destroy);  //authenticate sensitive route
+  app.post('/createProduct', auth, create);         //authenticate sensitive route
 };
 

@@ -94,7 +94,7 @@ export class Users_handler {
         }
     };
 
-    //"authenticate" method will take "user_name" and "password" then check 1)if the "user_name" is valid, 2)password  is matched with the hashed one inside the DB, 3)user_name and password is together. 
+    //"authenticate" method will take "user_name" and "password" then check 1)if the "user_name" is valid, 2)password  is matched with the hashed one inside the DB, 3)user_name and password is a pair. 
     async authenticate(user_name: string, password : string): Promise<Users | null>  {
         try {
             const conn = await client.connect();
