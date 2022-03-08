@@ -83,7 +83,7 @@ const create = async (req: Request, res: Response): Promise<void> => {
       res.send('you are not authorized to create a book, sign in first!.')
     }
 
-    //pass bookInfo object to create to invoke the method from model file to actually connect to DB.
+    //pass ProductInfo object to create to invoke the method from model file to actually connect to DB.
     const result = await product.create(productInfo)
     res.json(result);
   } catch (error) {
@@ -91,8 +91,19 @@ const create = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+//to get all products ordered by category
+const allProductsByCategory = async (_req: Request, res: Response)=>{
+  try {
+    const result = await product.allProductsByCategory();
+    res.json(result);
+  } catch (error) {
+    throw errorMethod(error);
+  }
+}
+
 export const products_route = (app: express.Application): void => {
   app.get('/allProducts', index);
+  app.get('allProductsByCategory', allProductsByCategory);
   app.get('/showProduct/:id', show);
   app.delete('/deleteProduct/:id', destroy);
   app.post('/createProduct', create);

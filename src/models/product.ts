@@ -92,4 +92,17 @@ export class Product_handlers {
       throw errorMethod(error)
     }
   }
+
+  async allProductsByCategory(): Promise<Product[]>{
+    try {
+        const conn = await client.connect();
+        const sql = `SELECT * FROM product ORDER BY category;`;
+        const result = await conn.query(sql);
+        conn.release();
+        return result.rows
+    } catch (error) {
+      throw errorMethod(error)
+    }
+
+  }
 }
