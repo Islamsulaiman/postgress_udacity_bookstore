@@ -24,10 +24,19 @@ This API uses various technologies to achieve the required functionality:
 
 ### on postgres shell
 
+1. create main DB:
+
 - run 'CREATE DATABASE shopping' to create a data base on your machine called "shopping"
 - create a user on postgres by running 'CREATE USER shopping_user WITH PASSWORD 'password123'; '
-- run '\c shopping' to connect to our DB
+- run '\c shopping' to connect to our DB.
 - run 'GRANT ALL PRIVILEGES ON DATABASE shopping TO shopping_user;' so we can access and edit on our DB.
+
+2. Create test DB -if you want to perform testing using jasmine- :
+
+- run 'CREATE DATABASE shopping_test' to create a data base on your machine called "shopping_test"
+- create a user on postgres by running 'CREATE USER shopping_user_test WITH PASSWORD 'password123'; '
+- run '\c shopping_test' to connect to our DB.
+- run 'GRANT ALL PRIVILEGES ON DATABASE shopping_test TO shopping_user_test;y' so we can access and edit on our DB.
 
 ### on our machine
 
