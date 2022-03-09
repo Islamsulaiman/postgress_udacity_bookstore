@@ -9,6 +9,8 @@ dotenv.config();
 //import jwt method to create JWT with it
 import jwt, { Secret } from 'jsonwebtoken';
 
+import { parseJwt } from "../services/authenticate";
+
 
 //import bcrypt package to be used i n hashing and comparing passwords with hashed ones
 import bcrypt from 'bcrypt';
@@ -74,7 +76,9 @@ export class Users_handler {
     async create(u : Users): Promise<string> {
         try {
             const conn = await client.connect();
-            const sql = `INSERT INTO users(f_name, l_name, user_name, password, age) VALUES ($1, $2, $3, $4, $5) RETURNING user_name, password;`;
+            //return only the id so I can embed it to my token, so I can see the id and use it later with creating new order
+            // dont ever add sensitive information to the token, because it can be easially decoded.
+            const sql = `INSERT INTO users(f_name, l_name, user_name, password, age) VALUES ($1, $2, $3, $4, $5) RETURNING id;`;
 
             //hash variable will contain the return of bcrypt.hashSync() which will be the final hashed password with salting too, and its not asynchronous.
             //bcrypt.hashSync(userInputPassword + bcryptPassFromEnvFile  ,  NoOfHashingRounds)
@@ -86,6 +90,7 @@ export class Users_handler {
             //This will return a token for this user, we can use it later to verify the user.
             const token =  jwt.sign({user: result.rows[0]}, TOKEN_PASS as string);
 
+            // console.log(`payload : ${parseJwt(token)}`);
             conn.release();
 
             return token;

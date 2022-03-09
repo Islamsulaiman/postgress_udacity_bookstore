@@ -43,7 +43,7 @@ const createOrderHandler = async (req: Request, res: Response) =>{
         res.json(result);
     } catch (error) {
         // throw errorMethod(error)
-        res.send(error)
+        res.send('make sure that you a valid user_id');
     }
 }
 
