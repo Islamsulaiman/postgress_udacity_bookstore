@@ -117,4 +117,18 @@ export class Users_handler {
             throw errorMethod(error);
         }
     }
+
+    //method to update user info after passing user new data and the token in the body, but this method will not update the password 
+    async update(u: Users) : Promise<Users>{
+        // if(u.password)
+        try {
+            const conn = await client.connect();
+            const sql = `UPDATE users SET f_name = ($1), l_name = ($2), user_name = ($3), password = ($4), age = ($5) WHERE id = ($6) RETURNING *;`;
+            const result = await conn.query(sql, [u.f_name, u.l_name, u.user_name, u.password, u.age, u.id]);
+            conn.release();
+            return result.rows[0];
+        } catch (error) {
+            throw errorMethod(error);
+        }
+    }
 };

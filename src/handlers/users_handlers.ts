@@ -65,7 +65,25 @@ const authenticateUser = async (req : Request, res: Response)=>{
     } catch (error) {
         throw errorMethod(error);
     }
+}
 
+//update will update the user data according to his entered data in the body
+const updateUserHandler = async(req: Request, res: Response) => {
+
+    const userInfo: Users = {
+            f_name : req.body.f_name,
+            l_name : req.body.l_name,
+            user_name : req.body.user_name,
+            password : req.body.password,
+            age : req.body.age,
+            id : req.body.id
+        }
+    try {
+        const result = await user.update(userInfo);
+        res.json(result);
+    } catch (error) {
+        res.send('make sure you input the correct user data and token!')
+    }
 }
 
 export const usersRoutes = (app: express.Application) => {
@@ -74,4 +92,5 @@ export const usersRoutes = (app: express.Application) => {
     app.delete('/deleteUser/:id',auth , destroyUsers)
     app.post('/createUser',auth , createUsers)
     app.get('/auth',auth , authenticateUser)
+    app.post('/updateUser',auth , updateUserHandler)
 }
