@@ -6,12 +6,13 @@ import { Product_handlers } from '../models/product';
 //create an instance from the class to be able to test it's methods and return functions
 const product = new Product_handlers();
 
-describe('Test that the index method inside Book_handlers class is defined', () => {
+describe('Test that the index method inside Product_handlers class is defined', () => {
+  it('book.index return is working', async () => {
+  const result = await product.index();
+  expect(result).toEqual([]);
+  });
   it('book.index', () => {
     expect(product.index).toBeDefined();
   });
-  it('book.index return is working', async () => {
-    const result = await product.index();
-    expect(result).toEqual([]);
-  });
+
 });
