@@ -10,7 +10,6 @@ import { usersRoutes } from './handlers/users_handlers';
 //import the route to control orders.
 import { ordersRoute } from './handlers/orders_handler';
 
-
 const app: express.Application = express();
 
 //dont add type for this variable because it's already initialized with string value and typescript can
@@ -30,7 +29,6 @@ usersRoutes(app);
 
 //to grant me access to orders and orders_products table
 ordersRoute(app);
-
 
 app.listen(3000, function () {
   console.log(`starting app on: ${address}`);

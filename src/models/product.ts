@@ -13,10 +13,9 @@ export type Product = {
 };
 
 //use this method for error handling instead of copy past at every line.
-const errorMethod = (error : unknown) =>{
-     return new Error (`The Error is : ${error as unknown as string}`);
-}
-
+const errorMethod = (error: unknown) => {
+  return new Error(`The Error is : ${error as unknown as string}`);
+};
 
 //create the sql class which will contain all the CRUD sql methods
 export class Product_handlers {
@@ -36,7 +35,7 @@ export class Product_handlers {
       return result.rows;
     } catch (error) {
       //we should use 'throw new Error()' as error handling
-      throw errorMethod(error)
+      throw errorMethod(error);
     }
   }
   // create delete sql to delete a row based on id;
@@ -52,7 +51,7 @@ export class Product_handlers {
       conn.release();
       return product;
     } catch (error) {
-        throw errorMethod(error)
+      throw errorMethod(error);
     }
   }
   // create insert sql to insert a row to the table
@@ -64,11 +63,7 @@ export class Product_handlers {
       //'RETURNING *' this clause will return the final line that will be inserted to the DB to 'result' variable, so we could check what is the final line added, we could use it with DELETE and update too.
       const sql = `INSERT INTO product (name, price, category) VALUES ($1, $2, $3) RETURNING *`;
       //add sql as a 1st arg , then add an array of the target values from the object Book.
-      const result = await conn.query(sql, [
-        b.name,
-        b.price,
-        b.category
-      ]);
+      const result = await conn.query(sql, [b.name, b.price, b.category]);
       //save the 1st element from the array returned from "result" variable.
       const product = result.rows[0];
       conn.release();
@@ -89,20 +84,19 @@ export class Product_handlers {
       // result.rows will always return an array, even if I'am only returning one value it will return an array of one value, so I should index[0] to it.
       return result.rows[0];
     } catch (error) {
-      throw errorMethod(error)
+      throw errorMethod(error);
     }
   }
 
-  async allProductsByCategory(): Promise<Product[]>{
+  async allProductsByCategory(): Promise<Product[]> {
     try {
-        const conn = await client.connect();
-        const sql = `SELECT * FROM product ORDER BY category;`;
-        const result = await conn.query(sql);
-        conn.release();
-        return result.rows;
+      const conn = await client.connect();
+      const sql = `SELECT * FROM product ORDER BY category;`;
+      const result = await conn.query(sql);
+      conn.release();
+      return result.rows;
     } catch (error) {
-      throw errorMethod(error)
+      throw errorMethod(error);
     }
-
   }
 }
