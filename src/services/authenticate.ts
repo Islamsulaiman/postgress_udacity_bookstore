@@ -8,6 +8,8 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 
+import jwt_decode from "jwt-decode";
+
 //'auth' is a middleware that requires token from the user to invoke certain sensitive routes that 
 export const auth = ( req: Request, res: Response, next: Function)=>{
     try {
@@ -27,11 +29,7 @@ export const auth = ( req: Request, res: Response, next: Function)=>{
 
 //this function will decode the entered token and get the payload from it, here the payload is the user id.
 export const parseJwt  = (token: string) => {
-    var base64Url = token.split('.')[1];
-    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
-
-    return JSON.parse(jsonPayload);
+    // let decode = jwt_decode(token);
+    let decoded = jwt.decode(token)
+    return decoded;
 };

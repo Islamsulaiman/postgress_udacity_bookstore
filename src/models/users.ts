@@ -11,6 +11,8 @@ import jwt, { Secret } from 'jsonwebtoken';
 
 import { parseJwt } from "../services/authenticate";
 
+import jwt_decode from "jwt-decode";
+
 
 //import bcrypt package to be used i n hashing and comparing passwords with hashed ones
 import bcrypt from 'bcrypt';
@@ -90,7 +92,19 @@ export class Users_handler {
             //This will return a token for this user, we can use it later to verify the user.
             const token =  jwt.sign({user: result.rows[0]}, TOKEN_PASS as string);
 
-            // console.log(`payload : ${parseJwt(token)}`);
+
+
+            
+            //return an object like this { user: { id: 4 }, iat: 1646849670 }
+            // const decoded = jwt.decode(token)
+
+            // const jwtDecode = jwt_decode("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo0fSwiaWF0IjoxNjQ2ODQ5NjcwfQ.nCxL_2_bOwSh8LwuOMI3cIWbdqTO5HvMGMPpyGUrFDI")
+
+            // const v = parseJwt("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo0fSwiaWF0IjoxNjQ2ODQ5NjcwfQ.nCxL_2_bOwSh8LwuOMI3cIWbdqTO5HvMGMPpyGUrFDI")
+            // // console.log(`payload : ${parseJwt("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo0fSwiaWF0IjoxNjQ2ODQ5NjcwfQ.nCxL_2_bOwSh8LwuOMI3cIWbdqTO5HvMGMPpyGUrFDI")}`);
+            
+
+
             conn.release();
 
             return token;
