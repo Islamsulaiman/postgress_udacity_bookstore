@@ -1,12 +1,15 @@
-// // in this file I'am testing all the methods inside users model
+// // in this file I'am testing all users model.
 
 //import book_handlers to test each one of its methods
 import {Users_handler} from "../models/users"
+import { Users } from "../models/users";
 
 // import jasmine from "jasmine";
 
 //create an instance from the class to be able to test it's methods and return functions
 const user = new Users_handler();
+
+
 
 describe('Test that every model inside usersModel is defined', () => {
     it('user.index is defined', () => {
@@ -30,9 +33,29 @@ describe('Test that every model inside usersModel is defined', () => {
 
 });
 
-describe("test that user models return an initial empty return", ()=>{
-  it('user.index initial return is working', async () => {
-  const result = await user.index();
-  expect(result).toEqual([]);
-  });
-})
+// describe("test that user models return an initial empty return", ()=>{
+//   it('user.index initial return is working', async () => {
+//   const result = await user.index();
+//   expect(result).toEqual([]);
+//   });
+//   it('user.index initial return is working', async () => {
+//   const result = await user.authenticate();
+//   expect(result).toEqual([]);
+//   });
+//   it('user.index initial return is working', async () => {
+//   const result = await user.index();
+//   expect(result).toEqual([]);
+//   });
+//   it('user.index initial return is working', async () => {
+//   const result = await user.index();
+//   expect(result).toEqual([]);
+//   });
+//   it('user.index initial return is working', async () => {
+//   const result = await user.index();
+//   expect(result).toEqual([]);
+//   });
+//   it('user.index initial return is working', async () => {
+//   const result = await user.index();
+//   expect(result).toEqual([]);
+//   });
+// })
