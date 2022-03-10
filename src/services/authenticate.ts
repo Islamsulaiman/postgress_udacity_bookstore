@@ -8,7 +8,6 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
 
-import jwt_decode from 'jwt-decode';
 
 //'auth' is a middleware that requires token from the user to invoke certain sensitive routes that
 export const auth = (req: Request, res: Response, next: Function) => {

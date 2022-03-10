@@ -36,7 +36,7 @@ This API uses various technologies to achieve the required functionality:
 - run ( CREATE DATABASE shopping_test; ) to create a data base on your machine called "shopping_test"
 - create a user on postgres by running ( CREATE USER shopping_user_test WITH PASSWORD 'password123'; )
 - run ( \c shopping_test ) to connect to our DB.
-- run ( GRANT ALL PRIVILEGES ON DATABASE shopping_test TO shopping_user_test; ) so we can access and edit on our DB.
+- run ( GRANT ALL PRIVILEGES ON DATABASE shopping_test TO shopping_user_test; ) so we can access and edit on our DB Via our newly created user.
 
 ### on our machine
 

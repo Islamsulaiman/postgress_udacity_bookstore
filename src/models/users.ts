@@ -11,7 +11,6 @@ import jwt, { Secret } from 'jsonwebtoken';
 
 import { parseJwt } from '../services/authenticate';
 
-import jwt_decode from 'jwt-decode';
 
 //import bcrypt package to be used i n hashing and comparing passwords with hashed ones
 import bcrypt from 'bcrypt';
