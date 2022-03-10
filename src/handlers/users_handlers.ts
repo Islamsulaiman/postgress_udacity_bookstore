@@ -88,10 +88,10 @@ const updateUserHandler = async (req: Request, res: Response) => {
 };
 
 export const usersRoutes = (app: express.Application) => {
-  app.get('/showAllUsers', auth, indexUsers);
+  app.get('/showAllUsers', indexUsers);
   app.get('/showOneUser/:id', auth, showUsers);
   app.delete('/deleteUser/:id', auth, destroyUsers);
   app.post('/createUser', createUsers);
   app.get('/auth', auth, authenticateUser);
-  app.post('/updateUser', auth, updateUserHandler);
+  app.post('/updateUser', updateUserHandler);
 };
