@@ -28,6 +28,17 @@ export type Users = {
   age: number;
 };
 
+//all elements of this type will be optional, because when user want to update his data he might not want to update all his data so they have to be optional to not cause errors with TS undefined error
+export type updateUsers = {
+  //add ? after id to make it optional, because not all variable of type 'Users' will add 'id' because it's added automatically by the DB
+  id?: number;
+  f_name?: string;
+  l_name?: string;
+  user_name?: string;
+  password?: string;
+  age?: number;
+}
+
 //use this method for error handling instead of copy past at every line.
 const errorMethod = (error: unknown) => {
   return new Error(`The Error is : ${error as unknown as string}`);
@@ -99,14 +110,18 @@ export class Users_handler {
       const token = jwt.sign({ user: result.rows[0] }, TOKEN_PASS as string);
 
       //return an object like this { user: { id: 4 }, iat: 1646849670 }
-      const decoded = jwt.decode(token)
+      // const decoded = jwt.decode(token)
+
+      // const decoded: string = jwt.verify(token,  process.env.TOKEN_PASS as string);
+      // //trying to access id object from within decoded return
+      // const idDecoded = decoded.id
 
       // const jwtDecode = jwt_decode("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo0fSwiaWF0IjoxNjQ2ODQ5NjcwfQ.nCxL_2_bOwSh8LwuOMI3cIWbdqTO5HvMGMPpyGUrFDI")
 
       // const v = parseJwt("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo0fSwiaWF0IjoxNjQ2ODQ5NjcwfQ.nCxL_2_bOwSh8LwuOMI3cIWbdqTO5HvMGMPpyGUrFDI")
       // // console.log(`payload : ${parseJwt("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo0fSwiaWF0IjoxNjQ2ODQ5NjcwfQ.nCxL_2_bOwSh8LwuOMI3cIWbdqTO5HvMGMPpyGUrFDI")}`);
 
-      console.log(decoded)
+      // console.log(decoded)
       conn.release();
 
       return token;
@@ -145,21 +160,59 @@ export class Users_handler {
   }
 
   //method to update user info after passing user new data and the token in the body, but this method will not update the password
-  async update(u: Users): Promise<Users> {
-    // if(u.password)
+  async update(u: updateUsers): Promise<Users> {
+    // Eng: Tarek El-Barody  helped me with this idea of optional update attributes.
+    //I want to give the user the ability to update only the attributes he want to update, so I need to create SQL query that changes based on user input .
+    //in this try/catch I check for every user attribute I can change if the user passed or not, if he passed this attribute then I append it to attribute array to be used as SQL parameters in "result" step and attach it to "innerSQL" which is the main part of our query that changes based on user input.
+
     try {
-      const conn = await client.connect();
-      const sql = `UPDATE users SET f_name = ($1), l_name = ($2), user_name = ($3), password = ($4), age = ($5) WHERE id = ($6) RETURNING *;`;
-      const result = await conn.query(sql, [
-        u.f_name,
-        u.l_name,
-        u.user_name,
-        u.password,
-        u.age,
-        u.id,
-      ]);
-      conn.release();
-      return result.rows[0];
+      const userAttributes = [];
+      //we will add to that to be added to sql query
+      let innerSql = '';
+      //counter will help with place holders number
+      let count = 0;
+
+      if(u.f_name){
+        //increment count, to be used with place holders
+        count++;
+        //push to "userAttributes" array, to be used later for sql parameter array
+        userAttributes.push(u.f_name);
+        innerSql += 'f_name=$' + count + ','
+      }
+
+      if(u.l_name){
+        count++;
+        userAttributes.push(u.l_name);
+        innerSql += 'l_name=$' + count + ','
+      }
+      if(u.age){
+        count++;
+        userAttributes.push(u.age);
+        innerSql += 'age=$' + count + ','
+      }
+      if(u.user_name){
+        count++;
+        userAttributes.push(u.user_name);
+        innerSql += 'user_name=$' + count + ','
+      }
+      // count++;
+      // innerSql += 'id=$' + count +',';
+
+      if(count >= 1){
+        innerSql = innerSql.slice(0, innerSql.length -1);
+
+        const sql = 'UPDATE users SET ' + innerSql + 'WHERE id = 3 RETURNING *;';
+        const conn = await client.connect();
+        const result = await conn.query(sql, userAttributes);
+        conn.release();
+        return result.rows[0];
+      }else {
+        throw new Error(
+          `There is no data to update is provided`
+        );
+      }
+      // const sql = `UPDATE users SET f_name = ($1), l_name = ($2), user_name = ($3), password = ($4), age = ($5) WHERE id = ($6) RETURNING *;`;
+      
     } catch (error) {
       throw errorMethod(error);
     }
