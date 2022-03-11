@@ -56,11 +56,11 @@ export class orders_handler {
   }
 
   // create method creates new order for specific user, so we can attach product to it latter using product_orders table using addOrder method
-  async create(o: Orders): Promise<Orders> {
+  async create(userId: number): Promise<Orders> {
     try {
       const conn = await client.connect();
-      const sql = `INSERT INTO orders (status, user_id) VALUES ($1, $2) RETURNING *;`;
-      const result = await client.query(sql, [o.status, o.user_id]);
+      const sql = `INSERT INTO orders (user_id) VALUES ($1) RETURNING *;`;
+      const result = await client.query(sql, [userId]);
       conn.release();
       return result.rows[0];
     } catch (error) {

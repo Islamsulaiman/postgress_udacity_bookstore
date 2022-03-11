@@ -32,17 +32,14 @@ const showOneOrder = async (req: Request, res: Response) => {
 
 //to handle creating new orders for the user to add products to them later
 const createOrderHandler = async (req: Request, res: Response) => {
-  const orderObject: Orders = {
-    status: req.body.status,
-    user_id: req.body.user_id,
-  };
 
   try {
-    const result = await orders.create(orderObject);
+    //we only need user_id to attach the order to, status of order is default to "open".
+    const result = await orders.create(parseInt(req.params.id));
     res.json(result);
   } catch (error) {
     // throw errorMethod(error)
-    res.send('make sure that you a valid user_id');
+    res.send('make sure that you passed a valid user_id');
   }
 };
 
@@ -65,6 +62,6 @@ const addProductToOrder = async (req: Request, res: Response) => {
 export const ordersRoute = (app: express.Application) => {
   app.get('/showAllOrders', showAllOrders);
   app.get('/showOneOrder/:id', showOneOrder);
-  app.post('/createOrder', createOrderHandler);
+  app.post('/createOrder/:id', createOrderHandler);
   app.post('/order/:id/product', addProductToOrder);
 };
