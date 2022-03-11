@@ -1,8 +1,11 @@
 //import SQL methods class to destructure it later and the type
 import { Product, Product_handlers } from '../models/product';
 
+//getToken() get and parse the token from request header so we can use token to verify user.
+import { getToken } from '../services/authenticate';
+
 //import auth middleware, to authenticate user using tokens before invoking certain sensitive routes
-import { auth } from '../services/authenticate';
+import { authHeader, auth } from '../services/authenticate';
 
 //import express;
 import express, { Request, Response } from 'express';
@@ -50,18 +53,19 @@ const show = async (req: Request, res: Response): Promise<void> => {
 //create a route for delete() method;
 //this route takes an argument id
 const destroy = async (req: Request, res: Response): Promise<void> => {
+  
   try {
-    try {
-      jwt.verify(req.body.token, process.env.TOKEN_PASS as string);
-    } catch (error) {
-      //401 for unauthorized
-      res.status(401);
-      res.send('you are not authorized to delete a book, sign in first!.');
-    }
+    // try {
+    //   jwt.verify(req.body.token, process.env.TOKEN_PASS as string);
+    // } catch (error) {
+    //   //401 for unauthorized
+    //   res.status(401);
+    //   res.send('you are not authorized to delete a book, sign in first!.');
+    // }
     const result: object = await product.delete(parseInt(req.params.id));
     res.json(result);
   } catch (error) {
-    throw errorMethod(error);
+    res.send('you are not authorized to delete a book, sign in first!.');
   }
 };
 
@@ -69,26 +73,18 @@ const destroy = async (req: Request, res: Response): Promise<void> => {
 //this route takes an argument id
 const create = async (req: Request, res: Response): Promise<void> => {
   try {
-    //since create method from the class takes an object of type Books, we need to create an object with the same exact keys with values from req.body object, to be actually passed to create method so it will return to result variable.
+    //since create method from the class takes an object of type Product, we need to create an object with the same exact keys with values from req.body object, to be actually passed to create method so it will return to result variable.
     const productInfo: Product = {
       name: req.body.name,
       price: req.body.price,
       category: req.body.category,
     };
 
-    //this try and catch block to verify first if the user is logged by checking the provided token by client
-    try {
-      jwt.verify(req.body.token, process.env.TOKEN_PASS as string);
-    } catch (error) {
-      res.status(401);
-      res.send('you are not authorized to create a book, sign in first!.');
-    }
-
     //pass ProductInfo object to create to invoke the method from model file to actually connect to DB.
     const result = await product.create(productInfo);
     res.json(result);
   } catch (error) {
-    throw errorMethod(error);
+    res.send("Check if the entered data is valid!")
   }
 };
 
@@ -106,6 +102,6 @@ export const products_route = (app: express.Application): void => {
   app.get('/allProducts', index);
   app.get('/allProductsByCategory', allProductsByCategory);
   app.get('/showProduct/:id', show);
-  app.delete('/deleteProduct/:id', auth, destroy); //authenticate sensitive route
-  app.post('/createProduct', auth, create); //authenticate sensitive route
+  app.delete('/deleteProduct/:id', authHeader, destroy); //authenticate sensitive route
+  app.post('/createProduct', authHeader, create); //authenticate sensitive route
 };

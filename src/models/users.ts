@@ -3,9 +3,6 @@
 //to connect to DB
 import client from '../database';
 
-//getToken() get and parse the token from request header so we can use token to verify user.
-import { getToken } from '../services/authenticate';
-
 //import dotenv to use variable from .env file for hashing and salt, and grant access to process.env object
 import dotenv from 'dotenv';
 dotenv.config();
