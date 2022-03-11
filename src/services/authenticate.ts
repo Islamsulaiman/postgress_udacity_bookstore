@@ -27,12 +27,4 @@ export const auth = (req: Request, res: Response, next: Function) => {
   }
 };
 
-// //this function will decode the entered token and get the payload from it, here the payload is the user id.
-// export const parseJwtObject = (decoded: Object) => {
-//   // let innerObject = { user: { id: 12 }, iat: 1646910062 }
-//   // let decode = jwt_decode(token);
-//   let innerObject = decoded
-//   let id = innerObject['id']
-//   return decoded;
-// };
 

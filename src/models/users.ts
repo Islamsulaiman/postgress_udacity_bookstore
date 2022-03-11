@@ -7,9 +7,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 //import jwt method to create JWT with it
-import jwt, { decode, Secret } from 'jsonwebtoken';
-
-// import { parseJwtObject } from '../services/authenticate';
+import jwt, { Secret } from 'jsonwebtoken';
 
 
 //import bcrypt package to be used i n hashing and comparing passwords with hashed ones
@@ -71,11 +69,21 @@ export class Users_handler {
     }
   }
 
-  async destroy(id: number): Promise<Users> {
+  //destroy() delets the user info after the client provide us with the user token
+  async destroy(token: string): Promise<Users> {
+
+    //decoded will return back the payload which is like this { user: { id: 4 }, iat: 1646849670 }.
+    const tokenPayload = jwt.verify(token,  process.env.TOKEN_PASS as string);
+    //userId will try to access id object which is nested inside user key.
+    //(tokenPayload as jwt.JwtPayload) will give us the access to payload even before it's created, because if we try to access it normally we cant because it's undefined now.
+    // ".user.id" is trying to access id based on the structure of our payload which have user as a key then id object as value.
+    let userId = (tokenPayload as jwt.JwtPayload).user.id
+    //we will use userId to access him on the DB
+
     try {
       const conn = await client.connect();
       const sql = `DELETE FROM users WHERE id = ($1) RETURNING *;`;
-      const result = await conn.query(sql, [id]);
+      const result = await conn.query(sql, [userId]);
       conn.release();
       return result.rows[0];
     } catch (error) {

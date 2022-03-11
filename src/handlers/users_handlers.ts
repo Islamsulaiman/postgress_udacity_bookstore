@@ -33,7 +33,7 @@ const showUsers = async (req: Request, res: Response) => {
 
 const destroyUsers = async (req: Request, res: Response) => {
   try {
-    const result = await user.destroy(parseInt(req.params.id));
+    const result = await user.destroy(req.body.token);
     res.json(result);
   } catch (error) {
     throw errorMethod(error);
@@ -70,15 +70,6 @@ const authenticateUser = async (req: Request, res: Response) => {
 };
 
 
-  // id?: number;
-  // f_name?: string;
-  // l_name?: string;
-  // user_name?: string;
-  // password?: string;
-  // age?: number;
-  // //token is not optional, the client should provide a token.
-  // token: string;
-
 //update will update the user data according to his entered data in the body
 const updateUserHandler = async (req: Request, res: Response) => {
   const userInfo: updateUsers = {
@@ -100,7 +91,7 @@ const updateUserHandler = async (req: Request, res: Response) => {
 export const usersRoutes = (app: express.Application) => {
   app.get('/showAllUsers', indexUsers);
   app.get('/showOneUser/:id', auth, showUsers);
-  app.delete('/deleteUser/:id', auth, destroyUsers);
+  app.delete('/deleteUser', auth, destroyUsers);
   app.post('/createUser', createUsers);
   app.get('/auth', auth, authenticateUser);
   app.post('/updateUser', updateUserHandler);
