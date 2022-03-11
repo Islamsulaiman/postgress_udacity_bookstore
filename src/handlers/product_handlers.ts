@@ -51,17 +51,10 @@ const show = async (req: Request, res: Response): Promise<void> => {
 };
 
 //create a route for delete() method;
-//this route takes an argument id
+//this route takes a url parameter (id)
 const destroy = async (req: Request, res: Response): Promise<void> => {
   
   try {
-    // try {
-    //   jwt.verify(req.body.token, process.env.TOKEN_PASS as string);
-    // } catch (error) {
-    //   //401 for unauthorized
-    //   res.status(401);
-    //   res.send('you are not authorized to delete a book, sign in first!.');
-    // }
     const result: object = await product.delete(parseInt(req.params.id));
     res.json(result);
   } catch (error) {

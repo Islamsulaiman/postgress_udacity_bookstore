@@ -23,6 +23,7 @@ const showAllOrders = async (_req: Request, res: Response) => {
 const showOneOrder = async (req: Request, res: Response) => {
   try {
     const result = await orders.show(parseInt(req.params.id));
+
     res.json(result);
   } catch (error) {
     throw errorMethod(error);
@@ -62,8 +63,8 @@ const addProductToOrder = async (req: Request, res: Response) => {
 };
 
 export const ordersRoute = (app: express.Application) => {
-  app.get('/order', showAllOrders);
-  app.get('/oneOrder/:id', showOneOrder);
+  app.get('/showAllOrders', showAllOrders);
+  app.get('/showOneOrder/:id', showOneOrder);
   app.post('/createOrder', createOrderHandler);
   app.post('/order/:id/product', addProductToOrder);
 };
