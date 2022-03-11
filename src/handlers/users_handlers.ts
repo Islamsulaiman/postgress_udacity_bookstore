@@ -1,4 +1,4 @@
-import { Users, Users_handler } from '../models/users';
+import { updateUsers, Users, Users_handler } from '../models/users';
 
 const user = new Users_handler();
 
@@ -69,21 +69,31 @@ const authenticateUser = async (req: Request, res: Response) => {
   }
 };
 
+
+  // id?: number;
+  // f_name?: string;
+  // l_name?: string;
+  // user_name?: string;
+  // password?: string;
+  // age?: number;
+  // //token is not optional, the client should provide a token.
+  // token: string;
+
 //update will update the user data according to his entered data in the body
 const updateUserHandler = async (req: Request, res: Response) => {
-  const userInfo: Users = {
+  const userInfo: updateUsers = {
     f_name: req.body.f_name,
     l_name: req.body.l_name,
     user_name: req.body.user_name,
-    password: req.body.password,
     age: req.body.age,
     id: req.body.id,
+    token: req.body.token
   };
   try {
     const result = await user.update(userInfo);
     res.json(result);
   } catch (error) {
-    res.send('make sure you input the correct user data and token!');
+    // res.send('make sure you input the correct user data and token!');
   }
 };
 

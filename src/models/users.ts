@@ -7,7 +7,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 //import jwt method to create JWT with it
-import jwt, { Secret } from 'jsonwebtoken';
+import jwt, { decode, Secret } from 'jsonwebtoken';
 
 // import { parseJwtObject } from '../services/authenticate';
 
@@ -35,8 +35,9 @@ export type updateUsers = {
   f_name?: string;
   l_name?: string;
   user_name?: string;
-  password?: string;
   age?: number;
+  //token is not optional, the client should provide a token.
+  token: string;
 }
 
 //use this method for error handling instead of copy past at every line.
@@ -107,21 +108,15 @@ export class Users_handler {
       ]);
 
       //This will return a token for this user, we can use it later to verify the user.
-      const token = jwt.sign({ user: result.rows[0] }, TOKEN_PASS as string);
+      const token = jwt.sign({ user: result.rows[0] }, TOKEN_PASS as Secret);
+      
+      //decoded will return back the payload which is like this { user: { id: 4 }, iat: 1646849670 }.
+      const decoded = jwt.verify(token,  process.env.TOKEN_PASS as string);
+      //userId will try to access id object which is nested inside user key.
+      //(decoded as jwt.JwtPayload) will give us the access to payload even before it's created, because if we try to access it normally we cant because it's undefined now.
+      // ".user.id" is trying to access id based on the structure of our payload which have user as a key then id object as value.
+      let userId = (decoded as jwt.JwtPayload).user.id
 
-      //return an object like this { user: { id: 4 }, iat: 1646849670 }
-      // const decoded = jwt.decode(token)
-
-      // const decoded: string = jwt.verify(token,  process.env.TOKEN_PASS as string);
-      // //trying to access id object from within decoded return
-      // const idDecoded = decoded.id
-
-      // const jwtDecode = jwt_decode("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo0fSwiaWF0IjoxNjQ2ODQ5NjcwfQ.nCxL_2_bOwSh8LwuOMI3cIWbdqTO5HvMGMPpyGUrFDI")
-
-      // const v = parseJwt("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo0fSwiaWF0IjoxNjQ2ODQ5NjcwfQ.nCxL_2_bOwSh8LwuOMI3cIWbdqTO5HvMGMPpyGUrFDI")
-      // // console.log(`payload : ${parseJwt("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjo0fSwiaWF0IjoxNjQ2ODQ5NjcwfQ.nCxL_2_bOwSh8LwuOMI3cIWbdqTO5HvMGMPpyGUrFDI")}`);
-
-      // console.log(decoded)
       conn.release();
 
       return token;
@@ -161,10 +156,19 @@ export class Users_handler {
 
   //method to update user info after passing user new data and the token in the body, but this method will not update the password
   async update(u: updateUsers): Promise<Users> {
-    // Eng: Tarek El-Barody  helped me with this idea of optional update attributes.
+    // Eng: Tarek El-Barody  helped me with this idea of optional update method.
     //I want to give the user the ability to update only the attributes he want to update, so I need to create SQL query that changes based on user input .
     //in this try/catch I check for every user attribute I can change if the user passed or not, if he passed this attribute then I append it to attribute array to be used as SQL parameters in "result" step and attach it to "innerSQL" which is the main part of our query that changes based on user input.
 
+    //decoded will return back the payload which is like this { user: { id: 4 }, iat: 1646849670 }.
+    const tokenPayload = jwt.verify(u.token,  process.env.TOKEN_PASS as string);
+    //userId will try to access id object which is nested inside user key.
+    //(tokenPayload as jwt.JwtPayload) will give us the access to payload even before it's created, because if we try to access it normally we cant because it's undefined now.
+    // ".user.id" is trying to access id based on the structure of our payload which have user as a key then id object as value.
+    let userId = (tokenPayload as jwt.JwtPayload).user.id
+    //we will use userId to access him on the DB
+
+    console.log(userId)
     try {
       const userAttributes = [];
       //we will add to that to be added to sql query
@@ -195,13 +199,23 @@ export class Users_handler {
         userAttributes.push(u.user_name);
         innerSql += 'user_name=$' + count + ','
       }
-      // count++;
-      // innerSql += 'id=$' + count +',';
+      //use slice() on innerSql  and give it start and end arg's to take all the chars except the last comma added after the last attribute the user added , because slice ignores the end index which is the comma.
+      //we are forced to add this last comma at the because we dont know what is the added user attribute so we added it after all, then remove this comma from the final innerSql.
+      innerSql = innerSql.slice(0, innerSql.length-1)
 
+      //to increment count for the id placeholder in our query.
+      //make sure to pla ce this logic outside of if statement because it's not optional, there will always be id in our query
+      count++;
+
+      //this line to add WHERE clause for "id" and give it the incremented "count" placeholder, add space before WHERE to give space between placeholders and WHERE clause.
+      innerSql += ' WHERE id=$' + count ;
+      userAttributes.push(userId)  //userId we get from token
+
+      //to check if the user at least want to update one attribute.
       if(count >= 1){
-        innerSql = innerSql.slice(0, innerSql.length -1);
 
-        const sql = 'UPDATE users SET ' + innerSql + 'WHERE id = 3 RETURNING *;';
+        // pass innerSql inside the query, which contains all the user added args + WHERE clause.
+        const sql = 'UPDATE users SET ' + innerSql + ' RETURNING *;';
         const conn = await client.connect();
         const result = await conn.query(sql, userAttributes);
         conn.release();
