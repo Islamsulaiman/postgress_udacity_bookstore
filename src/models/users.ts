@@ -33,13 +33,10 @@ export type Users = {
 //all elements of this type will be optional, because when user want to update his data he might not want to update all his data so they have to be optional to not cause errors with TS undefined error
 export type updateUsers = {
   //add ? after id to make it optional, because not all variable of type 'Users' will add 'id' because it's added automatically by the DB
-  id?: number;
   f_name?: string;
   l_name?: string;
   user_name?: string;
   age?: number;
-  //token is not optional, the client should provide a token.
-  token: string;
 }
 
 //use this method for error handling instead of copy past at every line.
@@ -100,7 +97,7 @@ export class Users_handler {
     try {
       const conn = await client.connect();
       //return only the id so I can embed it to my token, so I can see the id and use it later with creating new order
-      // dont ever add sensitive information to the token, because it can be easially decoded.
+      // dont ever add sensitive information to the token, because it can be easily decoded.
       const sql = `INSERT INTO users(f_name, l_name, user_name, password, age) VALUES ($1, $2, $3, $4, $5) RETURNING id;`;
 
       //hash variable will contain the return of bcrypt.hashSync() which will be the final hashed password with salting too, and its not asynchronous.
@@ -122,13 +119,6 @@ export class Users_handler {
       //This will return a token for this user, we can use it later to verify the user.
       const token = jwt.sign({ user: result.rows[0] }, TOKEN_PASS as Secret);
       
-      //decoded will return back the payload which is like this { user: { id: 4 }, iat: 1646849670 }.
-      const decoded = jwt.verify(token,  process.env.TOKEN_PASS as string);
-      //userId will try to access id object which is nested inside user key.
-      //(decoded as jwt.JwtPayload) will give us the access to payload even before it's created, because if we try to access it normally we cant because it's undefined now.
-      // ".user.id" is trying to access id based on the structure of our payload which have user as a key then id object as value.
-      let userId = (decoded as jwt.JwtPayload).user.id
-
       conn.release();
 
       return token;
@@ -137,26 +127,35 @@ export class Users_handler {
     }
   }
 
-  //"authenticate" method will take "user_name" and "password" then check 1)if the "user_name" is valid, 2)password  is matched with the hashed one inside the DB, 3)user_name and password is a pair.
+  //"authenticate" method will take "user_name" and "password" then check  1)if the "user_name" is valid, 2)password  is matched with the hashed one inside the DB, 3)user_name and password is a pair.
   async authenticate(
     user_name: string,
     password: string
   ): Promise<Users | null> {
+
     try {
       const conn = await client.connect();
-      const sql = `SELECT password FROM users WHERE user_name = ($1);`;
+      const sql = `SELECT password, id FROM users WHERE user_name = ($1); `;
+      console.log("auth 1")
 
+      //result will contain an objet with two elements (password, id)
       const result = await conn.query(sql, [user_name]);
+      console.log(result.rows[0])
 
       if (result.rows.length) {
-        const user = result.rows[0];
+        const user = result.rows[0]
 
+        console.log("auth 3")
+        console.log(user.id)
+
+        //compareSync() is "bcrypt" method that return boolean if (user password + salt) = the hashed password from the DB 
         const match = bcrypt.compareSync(
           password + BCRYPT_PASS,
           result.rows[0].password
-        );
+        );   
 
         if (match) {
+          
           return user.password;
         }
       }
@@ -167,13 +166,13 @@ export class Users_handler {
   }
 
   //method to update user info after passing user new data and the token in the body, but this method will not update the password
-  async update(u: updateUsers): Promise<Users> {
+  async update(u: updateUsers, token: string): Promise<Users> {
     // Eng: Tarek El-Barody  helped me with this idea of optional update method.
     //I want to give the user the ability to update only the attributes he want to update, so I need to create SQL query that changes based on user input .
     //in this try/catch I check for every user attribute I can change if the user passed or not, if he passed this attribute then I append it to attribute array to be used as SQL parameters in "result" step and attach it to "innerSQL" which is the main part of our query that changes based on user input.
 
     //decoded will return back the payload which is like this { user: { id: 4 }, iat: 1646849670 }.
-    const tokenPayload = jwt.verify(u.token,  process.env.TOKEN_PASS as string);
+    const tokenPayload = jwt.verify(token,  process.env.TOKEN_PASS as string);
     //userId will try to access id object which is nested inside user key.
     //(tokenPayload as jwt.JwtPayload) will give us the access to payload even before it's created, because if we try to access it normally we cant because it's undefined now.
     // ".user.id" is trying to access id based on the structure of our payload which have user as a key then id object as value.

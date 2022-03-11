@@ -35,9 +35,7 @@ const showUsers = async (req: Request, res: Response) => {
 };
 
 const destroyUsers = async (req: Request, res: Response) => {
-  // //this takes the token from 
-  // const authorizationHeader = req.headers.authorization as string;
-  // const token = authorizationHeader.split(" ")[1]
+
   const token = getToken(req, res);
   try {
     const result = await user.destroy(token);
@@ -84,11 +82,12 @@ const updateUserHandler = async (req: Request, res: Response) => {
     l_name: req.body.l_name,
     user_name: req.body.user_name,
     age: req.body.age,
-    id: req.body.id,
-    token: req.body.token
+    // token: req.body.token
   };
+
+  const token = getToken(req, res);
   try {
-    const result = await user.update(userInfo);
+    const result = await user.update(userInfo, token);
     res.json(result);
   } catch (error) {
     // res.send('make sure you input the correct user data and token!');
@@ -97,9 +96,9 @@ const updateUserHandler = async (req: Request, res: Response) => {
 
 export const usersRoutes = (app: express.Application) => {
   app.get('/showAllUsers', indexUsers);
-  app.get('/showOneUser/:id', auth, showUsers);
+  app.get('/showOneUser/:id', authHeader, showUsers);
   app.delete('/deleteUser',authHeader,  destroyUsers);
   app.post('/createUser', createUsers);
-  app.get('/auth', auth, authenticateUser);
-  app.post('/updateUser', updateUserHandler);
+  app.get('/authenticateUser',  authenticateUser);
+  app.post('/updateUser',authHeader , updateUserHandler);
 };
