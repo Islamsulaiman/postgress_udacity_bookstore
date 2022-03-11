@@ -69,7 +69,7 @@ export class orders_handler {
   }
 
   //this method will add orders to orders_products table to create many to many relation between orders and products tables.
-  async addOrder(
+  async addToOrder(
     quantity: number,
     order_id: number,
     product_id: number
@@ -85,7 +85,7 @@ export class orders_handler {
       //check if the is closed
       if (status !== 'open') {
         throw new Error(
-          `Could not add product ${product_id} to order ${order_id} because order status is ${status}`
+          `Could not add product ${product_id} to order ${order_id} because the order is closed.`
         );
       }
     } catch (error) {

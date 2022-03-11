@@ -1,7 +1,14 @@
 // // this file will handle all of the orders methods to the target route
 import { Orders, orders_handler } from '../models/orders';
 
+//this class contains userDashboard which returns all the order and product information's about a specific user.
+import { serviceMethods } from '../services/dashboard';
+
+//create an instance of orders_handler to access all it's methods using the instance.
 const orders = new orders_handler();
+
+//create an instance of serviceMethods to access all it's methods using the instance.
+const services = new serviceMethods();
 
 import express, { Request, Response } from 'express';
 
@@ -43,13 +50,13 @@ const createOrderHandler = async (req: Request, res: Response) => {
   }
 };
 
-//to handle the adding new order functionality
+//to handle the adding new order functionality to order_product table, which is a many to many table between product table and order table.
 const addProductToOrder = async (req: Request, res: Response) => {
   const order_id: number = parseInt(req.params.id);
   const product_id: number = req.body.product_id;
   const quantity: number = req.body.quantity;
   try {
-    const result = await orders.addOrder(quantity, order_id, product_id);
+    const result = await orders.addToOrder(quantity, order_id, product_id);
     res.json(result);
   } catch (error) {
     // throw errorMethod(error)
@@ -59,9 +66,23 @@ const addProductToOrder = async (req: Request, res: Response) => {
   }
 };
 
+const userDashboard = async (req: Request, res: Response) => {
+  try {
+    const result = await services.userDashboard(parseInt(req.params.id));
+    res.json(result);
+  } catch (error) {
+        res.send(
+      'please make sure that product is available and the order is open !!'
+    );
+  }
+}
+
+
+
 export const ordersRoute = (app: express.Application) => {
   app.get('/showAllOrders', showAllOrders);
   app.get('/showOneOrder/:id', showOneOrder);
   app.post('/createOrder/:id', createOrderHandler);
-  app.post('/order/:id/product', addProductToOrder);
+  app.post('/addToOrder/:id/product', addProductToOrder);
+  app.get("/userDashboard/:id", userDashboard)
 };
