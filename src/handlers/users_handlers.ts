@@ -1,11 +1,14 @@
 import { updateUsers, Users, Users_handler } from '../models/users';
 
+//getToken() get and parse the token from request header so we can use token to verify user.
+import { getToken } from '../services/authenticate';
+
 const user = new Users_handler();
 
 import express, { Request, Response } from 'express';
 
 //import authentication method for restricted routes
-import { auth } from '../services/authenticate';
+import { authHeader, auth } from '../services/authenticate';
 
 //use this method for error handling instead of copy past at every line.
 const errorMethod = (error: unknown) => {
@@ -32,8 +35,12 @@ const showUsers = async (req: Request, res: Response) => {
 };
 
 const destroyUsers = async (req: Request, res: Response) => {
+  // //this takes the token from 
+  // const authorizationHeader = req.headers.authorization as string;
+  // const token = authorizationHeader.split(" ")[1]
+  const token = getToken(req, res);
   try {
-    const result = await user.destroy(req.body.token);
+    const result = await user.destroy(token);
     res.json(result);
   } catch (error) {
     throw errorMethod(error);
@@ -91,7 +98,7 @@ const updateUserHandler = async (req: Request, res: Response) => {
 export const usersRoutes = (app: express.Application) => {
   app.get('/showAllUsers', indexUsers);
   app.get('/showOneUser/:id', auth, showUsers);
-  app.delete('/deleteUser', auth, destroyUsers);
+  app.delete('/deleteUser',authHeader,  destroyUsers);
   app.post('/createUser', createUsers);
   app.get('/auth', auth, authenticateUser);
   app.post('/updateUser', updateUserHandler);

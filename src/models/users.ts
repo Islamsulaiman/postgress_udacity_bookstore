@@ -1,6 +1,10 @@
 //this file will contain the SQL class models for users table.
 
+//to connect to DB
 import client from '../database';
+
+//getToken() get and parse the token from request header so we can use token to verify user.
+import { getToken } from '../services/authenticate';
 
 //import dotenv to use variable from .env file for hashing and salt, and grant access to process.env object
 import dotenv from 'dotenv';
@@ -69,9 +73,9 @@ export class Users_handler {
     }
   }
 
-  //destroy() delets the user info after the client provide us with the user token
+  //destroy() delete's the user info after the client provide us with the user token
   async destroy(token: string): Promise<Users> {
-
+    
     //decoded will return back the payload which is like this { user: { id: 4 }, iat: 1646849670 }.
     const tokenPayload = jwt.verify(token,  process.env.TOKEN_PASS as string);
     //userId will try to access id object which is nested inside user key.
