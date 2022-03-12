@@ -20,6 +20,18 @@ This API uses various technologies to achieve the required functionality:
 - nodemon for automatic reload at development stage
 - postgres for data base
 
+## what dose this API do:
+
+### This is the backend for an online store, so you can do the following:
+
+1. Create user with password and additional ,data will be stored inside DB.
+2. Open new order for users.
+3. Add products into your cart.
+4. Gather information about users, products and orders for logged in users.
+5. Delete your profile.
+6. Update your user profile data.
+7. Show user dashboard.
+
 ## Setting up the postgres DB
 
 ### on postgres shell
@@ -78,3 +90,52 @@ This API uses various technologies to achieve the required functionality:
 
   - within console run (npm run start) this will start a server for you to interact with the API either using postman or any browser.
   - I will state how to use it in details inside REQUIRMENTS.md.
+
+  ## Scripts to run VIA npm:
+
+  1. (npm run prettier) => for formatting the code.
+  2. (npm run lint) => for lint the code, for better syntax.
+  3. (npm run start) => to start the API server.
+  4. (npm run test) => to test all methods and endpoint using jasmine at development phase.
+
+## DB schema
+
+This DB have four tables, each table with specific purpose, all tables are connected to each other with foreign keys.
+
+### DB tables:
+
+1. Users => all the users data
+2. product => information about all products
+3. orders => all orders created with their associated products
+4. orders_products => many to many table that have relations between orders created and their associated users.
+
+## tables schema:
+
+1.  Users:
+
+    id SERIAL PRIMARY KEY,
+    f_name VARCHAR(50),
+    l_name VARCHAR(50),
+    user_name VARCHAR(50) NOT NULL,
+    password text NOT NULL ,
+    age INTEGER
+
+2.  product:
+
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    price INTEGER NOT NULL,
+    category VARCHAR (100)
+
+3.  orders:
+
+    id SERIAL PRIMARY KEY,
+    status VARCHAR(15) DEFAULT 'open',
+    user_id BIGINT REFERENCES users(id) NOT NULL
+
+4.  orders_products:
+
+    id SERIAL PRIMARY KEY,
+    quantity INTEGER NOT NULL,
+    order_id BIGINT NOT NULL REFERENCES orders(id),
+    product_id BIGINT NOT NULL REFERENCES product(id)

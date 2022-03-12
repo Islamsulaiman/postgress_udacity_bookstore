@@ -95,7 +95,7 @@ const updateUserHandler = async (req: Request, res: Response) => {
 };
 
 export const usersRoutes = (app: express.Application) => {
-  app.get('/showAllUsers', indexUsers);
+  app.get('/showAllUsers',authHeader , indexUsers);           //authenticate sensitive route
   app.get('/showOneUser/:id', authHeader, showUsers);         //authenticate sensitive route
   app.delete('/deleteUser',authHeader,  destroyUsers);        //authenticate sensitive route
   app.post('/createUser', createUsers);
