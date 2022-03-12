@@ -7,6 +7,9 @@ import { serviceMethods } from '../services/dashboard';
 //create an instance of orders_handler to access all it's methods using the instance.
 const orders = new orders_handler();
 
+//import auth middleware, to authenticate user using tokens before invoking certain sensitive routes
+import { authHeader, auth } from '../services/authenticate';
+
 //create an instance of serviceMethods to access all it's methods using the instance.
 const services = new serviceMethods();
 
@@ -80,9 +83,9 @@ const userDashboard = async (req: Request, res: Response) => {
 
 
 export const ordersRoute = (app: express.Application) => {
-  app.get('/showAllOrders', showAllOrders);
-  app.get('/showOneOrder/:id', showOneOrder);
-  app.post('/createOrder/:id', createOrderHandler);
-  app.post('/addToOrder/:id/product', addProductToOrder);
-  app.get("/userDashboard/:id", userDashboard)
+  app.get('/showAllOrders',authHeader , showAllOrders);
+  app.get('/showOneOrder/:id',authHeader, showOneOrder);
+  app.post('/createOrder/:id',authHeader, createOrderHandler);
+  app.post('/addToOrder/:id/product',authHeader, addProductToOrder);
+  app.get("/userDashboard/:id",authHeader,  userDashboard)
 };

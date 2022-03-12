@@ -45,6 +45,86 @@ steps of using all functionality using postman
    b. You will be provided with the user data.
    c. you should be logged in.
 
-5.
+5. update User:
 
-### show all the users
+   a. access (http://localhost:3000/updateUser) as POST HTTP
+   b. provide new user info as json body then send, like:
+   {
+   "f_name" : "test",
+   "l_name" : "test",
+   "user_name" : "test",
+   "age" : 50
+   }
+   c. You will receive your new user info.
+   d. you should be logged in.
+   e. update dosnt change password.
+
+6. authenticate User:
+
+   authenticateUser takes user_id and password then check if they are correct.
+   a. access (http://localhost:3000/updateUser) as GET HTTP
+   b. provide user_name and your original password as json body then send, like:
+   {
+   "password" : "test",
+   "user_name" : "test",
+   }
+   c. dosnt require logging in.
+
+7. Delete user:
+
+   a. access (http://localhost:3000/deleteUser) as DELETE HTTP
+   b. dosnt need any data to be passed, it will detect your token automatically, then extract your id from it, then delete your profile.
+   c. you should be logged in.
+
+### Products functionality
+
+Product table schema:
+id SERIAL PRIMARY KEY,
+name VARCHAR(100) NOT NULL,
+price INTEGER NOT NULL,
+category VARCHAR (100)
+
+1. Create product:
+
+   a. access (http://localhost:3000/createProduct) as POST HTTP
+   b. provide product data as json body then send, like:
+   {
+   "name" : "test",
+   "price" : 100,
+   "category" : "tv"
+   }
+   c. product info will be returned
+   d. you should be logged in.
+
+2. Show all products:
+
+   a. access (http://localhost:3000/allProducts) as GET HTTP
+   b. this will return all the products.
+   c. dosnt require logging in.
+
+3. Show all products ordered by category:
+
+   a. access (http://localhost:3000/allProductsByCategory) as GET HTTP
+   b. this will return all the products ordered by category.
+   c. dosnt require logging in.
+
+4. Show one product:
+
+   a. access (http://localhost:3000/showProduct/:id) as GET HTTP, EX => <http://localhost:3000/showProduct/3> , id is the product id inside the DB.
+   b. You will be provided with the product data.
+   c. dosnt require logging in.
+
+5. Delete product:
+
+   a. access (http://localhost:3000/deleteProduct/:id) as DELETE HTTP, EX => <http://localhost:3000/deleteProduct/3> , id is the product id inside the DB.
+   b. You will be provided with the product data.
+   d. you should be logged in.
+
+### Orders functionality:
+
+Order table schema:
+id SERIAL PRIMARY KEY,
+status VARCHAR(15) DEFAULT 'open',
+user_id BIGINT REFERENCES users(id) NOT NULL
+
+1.
