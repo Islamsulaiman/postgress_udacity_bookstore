@@ -4,6 +4,9 @@
 import {Users_handler} from "../models/users"
 import { Users } from "../models/users";
 
+//to create connection with the DB
+import client from "../database";
+
 //create an instance from the class to be able to test it's methods and return functions
 const user = new Users_handler();
 
@@ -38,18 +41,20 @@ describe('Test that every model inside usersModel is defined', () => {
 });
 
 describe("test usersMethods connection status",() => {
+  beforeAll(()=>console.log("hello"))
+
   it("index", async ()=>{
     const response = await requestUserModels.get("/showAllUsers");
-    expect(response.status).toEqual(200);
-  })
-    it("showOneUser", async ()=>{
-    const response = await requestUserModels.get("/showOneUser/1");
     expect(response.status).toEqual(200);
   })
     it("createUser", async ()=>{
     const response = await requestUserModels.get("/createUser");
     expect(response.status).toEqual(200);
   })
+  //   it("showOneUser", async ()=>{
+  //   const response = await requestUserModels.get("/showOneUser/1");
+  //   expect(response.status).toEqual(200);
+  // })
   //   it("index", async ()=>{
   //   const response = await requestUserModels.get("/showAllUsers");
   //   expect(response.status).toEqual(200);
