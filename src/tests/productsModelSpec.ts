@@ -3,7 +3,6 @@
 //import book_handlers to test each one of its methods
 import { Product_handlers } from "../models/product";
 
-// import jasmine from "jasmine";
 
 //create an instance from the class to be able to test it's methods and return functions
 const product = new Product_handlers();
@@ -26,32 +25,4 @@ describe('Test that every model inside productModel is defined', () => {
     it('product.delete is defined', () => {
     expect(product.delete).toBeDefined();
   });
-
 });
-
-// describe("test that user models return an initial empty return", ()=>{
-//   it('user.index initial return is working', async () => {
-//   const result = await user.index();
-//   expect(result).toEqual([]);
-//   });
-//   it('user.index initial return is working', async () => {
-//   const result = await user.authenticate();
-//   expect(result).toEqual([]);
-//   });
-//   it('user.index initial return is working', async () => {
-//   const result = await user.index();
-//   expect(result).toEqual([]);
-//   });
-//   it('user.index initial return is working', async () => {
-//   const result = await user.index();
-//   expect(result).toEqual([]);
-//   });
-//   it('user.index initial return is working', async () => {
-//   const result = await user.index();
-//   expect(result).toEqual([]);
-//   });
-//   it('user.index initial return is working', async () => {
-//   const result = await user.index();
-//   expect(result).toEqual([]);
-//   });
-// })

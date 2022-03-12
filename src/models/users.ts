@@ -175,8 +175,7 @@ export class Users_handler {
     // ".user.id" is trying to access id based on the structure of our payload which have user as a key then id object as value.
     let userId = (tokenPayload as jwt.JwtPayload).user.id
     //we will use userId to access him on the DB
-
-    console.log(userId)
+    
     try {
       const userAttributes = [];
       //we will add to that to be added to sql query
