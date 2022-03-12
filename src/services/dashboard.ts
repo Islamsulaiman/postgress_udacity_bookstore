@@ -13,6 +13,7 @@ export class serviceMethods {
   async userDashboard(id: number) {
     try {
       const conn = await client.connect();
+      //to be able to use this query you have to have a user, order and products all related to each others
       const sql = 
       `SELECT users.id as user_id, user_name, status as order_status, orders.id as order_id, orders_products.product_id, product.name as product_name, orders_products.quantity as product_quantity FROM users 
         INNER JOIN orders ON users.id = orders.user_id 

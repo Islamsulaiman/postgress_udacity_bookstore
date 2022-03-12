@@ -72,7 +72,7 @@ const userDashboard = async (req: Request, res: Response) => {
     res.json(result);
   } catch (error) {
         res.send(
-      'please make sure that product is available and the order is open !!'
+      'please make sure that this user have an open order with products in it !!'
     );
   }
 }
