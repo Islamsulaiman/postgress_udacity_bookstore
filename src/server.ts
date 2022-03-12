@@ -10,7 +10,7 @@ import { usersRoutes } from './handlers/users_handlers';
 //import the route to control orders.
 import { ordersRoute } from './handlers/orders_handler';
 
-const app: express.Application = express();
+export const app: express.Application = express();
 
 //dont add type for this variable because it's already initialized with string value and typescript can
 const address = '0.0.0.0:3000';

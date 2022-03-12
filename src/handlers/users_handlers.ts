@@ -99,6 +99,6 @@ export const usersRoutes = (app: express.Application) => {
   app.get('/showOneUser/:id', authHeader, showUsers);         //authenticate sensitive route
   app.delete('/deleteUser',authHeader,  destroyUsers);        //authenticate sensitive route
   app.post('/createUser', createUsers);
-  app.get('/authenticateUser',  authenticateUser);
+  app.get('/authenticateUser', authenticateUser);
   app.post('/updateUser',authHeader , updateUserHandler);     //authenticate sensitive route
 };

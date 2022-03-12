@@ -15,6 +15,9 @@ import jwt, { Secret } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
 //get the necessary vars from .env file for hashing;
+//TOKEN_PASS is the password to create and verify tokens
+//SALT_NO is no. of hashing cycles
+// BCRYPT_PASS is the salt added to user password before hashing
 const { SALT_NO, BCRYPT_PASS, TOKEN_PASS } = process.env;
 
 export type Users = {

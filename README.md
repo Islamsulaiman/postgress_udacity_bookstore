@@ -20,7 +20,7 @@ This API uses various technologies to achieve the required functionality:
 - nodemon for automatic reload at development stage
 - postgres for data base
 
-## Setting up the project
+## Setting up the postgres DB
 
 ### on postgres shell
 
@@ -48,3 +48,33 @@ This API uses various technologies to achieve the required functionality:
 ### Note:
 
 - to delete all created tables at once, run "db-migrate reset" , don't run "db-migrate down" because it wont delete tables with foreign-key constrains.
+
+## Setup core packages:
+
+- within console, run (npm install) to install all the needed packages
+
+## Environment variables
+
+- This project needs Environment variables to be able to run as expected, but because this variables could be a sensitive info so you need to give your values for some of them.
+- I will provide the variables names, then you should give them values:
+
+  1.  create (.env) file in the root folder of the app
+  2.  the variables are:
+
+      DATABASE_HOST = <your machine host usually = 127.0.0.1>
+      POSTGRES_DB = shopping
+      POSTGRES_USER = shopping_user
+      POSTGRES_PASSWORD = pasword123
+      ENV = dev
+      POSTGRES_test_DB = shopping_test
+      POSTGRES_USER_test = shopping_user_test
+      SALT_NO = <this is the number of hashing cycles for password hashing, you could add any number>
+      BCRYPT_PASS = <this the added salt on user password before hashing, you could add any string but keep it secure and dont change it or you will lose your data in DB>
+      TOKEN_PASS = <this is the password used for creating and verifying user tokens, you can add any string but keep it secure and dont change it>
+
+  3.  add the provided variables with your values to them inside (.env) file.
+
+  ## How to run :
+
+  - within console run (npm run start) this will start a server for you to interact with the API either using postman or any browser.
+  - I will state how to use it in details inside REQUIRMENTS.md.
