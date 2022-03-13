@@ -4,13 +4,15 @@ module.exports = {
     commonjs: true,
     es2021: true,
   },
-  extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
-  parser: "@typescript-eslint/parser",
+  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended'],
+  parser: '@typescript-eslint/parser',
   parserOptions: {
-    ecmaVersion: "latest",
+    ecmaVersion: 'latest',
   },
-  plugins: ["@typescript-eslint"],
+  plugins: ['@typescript-eslint', 'prettier'],
   rules: {
-    "@typescript-eslint/no-var-requires": 0,
+    '@typescript-eslint/no-var-requires': 1, //0 means do nothing, 1 means warning, 2 means error
+    'no-console': 1,
+    'prefer-const': 'error',
   },
 };
