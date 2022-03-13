@@ -129,30 +129,27 @@ export class Users_handler {
   async authenticate(
     user_name: string,
     password: string
-  ): Promise<Users | null> {
+  ): Promise<string | null> {
     try {
       const conn = await client.connect();
       const sql = `SELECT password, id FROM users WHERE user_name = ($1); `;
-      console.log('auth 1');
 
       //result will contain an objet with two elements (password, id)
       const result = await conn.query(sql, [user_name]);
-      console.log(result.rows[0]);
 
+      //if length is more than 1
       if (result.rows.length) {
         const user = result.rows[0];
-
-        console.log('auth 3');
-        console.log(user.id);
 
         //compareSync() is "bcrypt" method that return boolean if (user password + salt) = the hashed password from the DB
         const match = bcrypt.compareSync(
           password + BCRYPT_PASS,
-          result.rows[0].password
+          //hashed password
+          user.password
         );
 
         if (match) {
-          return user.password;
+          return "your input data is correct";
         }
       }
       return null;
@@ -163,6 +160,7 @@ export class Users_handler {
 
   //method to update user info after passing user new data and the token in the body, but this method will not update the password
   async update(u: updateUsers, token: string): Promise<Users> {
+
     // Eng: Tarek El-Barody  helped me with this idea of optional update method.
     //I want to give the user the ability to update only the attributes he want to update, so I need to create SQL query that changes based on user input .
     //in this try/catch I check for every user attribute I can change if the user passed or not, if he passed this attribute then I append it to attribute array to be used as SQL parameters in "result" step and attach it to "innerSQL" which is the main part of our query that changes based on user input.

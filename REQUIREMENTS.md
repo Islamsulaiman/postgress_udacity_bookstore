@@ -57,18 +57,21 @@ steps of using all functionality using postman
    }
    c. You will receive your new user info.
    d. you should be logged in.
-   e. update dosnt change password.
+   e. update doesn't change password.
+   f. this model will update your own user associated with the token you are providing
 
 6. authenticate User:
 
    authenticateUser takes user_id and password then check if they are correct.
-   a. access (http://localhost:3000/updateUser) as GET HTTP
+   a. access (http://localhost:3000/authenticateUser) as GET HTTP
    b. provide user_name and your original password as json body then send, like:
    {
    "password" : "test",
    "user_name" : "test",
    }
-   c. dosnt require logging in.
+   c. doesn't require logging in.
+   d. provided with password and username, to check if valid or not.
+   e. returns "your input data is correct" if ok, else returns "null"
 
 7. Delete user:
 

@@ -36,7 +36,7 @@ const showUsers = async (req: Request, res: Response) => {
     res.json({
       status: 'success',
       data: result,
-      message: 'Users retrieved successfully',
+      message: 'User retrieved successfully',
     });
   } catch (error) {
     throw errorMethod(error);
@@ -50,7 +50,7 @@ const destroyUsers = async (req: Request, res: Response) => {
     res.json({
       status: 'success',
       data: result,
-      message: 'Users retrieved successfully',
+      message: 'User retrieved successfully',
     });
   } catch (error) {
     throw errorMethod(error);
@@ -70,7 +70,7 @@ const createUsers = async (req: Request, res: Response) => {
     res.json({
       status: 'success',
       data: result,
-      message: 'Users retrieved successfully',
+      message: 'User retrieved successfully',
     });
   } catch (error) {
     throw errorMethod(error);
@@ -87,10 +87,10 @@ const authenticateUser = async (req: Request, res: Response) => {
     res.json({
       status: 'success',
       data: result,
-      message: 'Users retrieved successfully',
+      message: 'User retrieved successfully',
     });
   } catch (error) {
-    throw errorMethod(error);
+    res.send("Check your input data!")
   }
 };
 
@@ -101,7 +101,6 @@ const updateUserHandler = async (req: Request, res: Response) => {
     l_name: req.body.l_name,
     user_name: req.body.user_name,
     age: req.body.age,
-    // token: req.body.token
   };
 
   const token = getToken(req, res);
