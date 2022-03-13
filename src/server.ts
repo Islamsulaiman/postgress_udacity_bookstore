@@ -1,6 +1,9 @@
 import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
 
+//helmet package will hide a-lot of the response  data sent by the client to be more secure 
+import helmet from 'helmet';
+
 //import route handlers
 import { products_route } from './handlers/product_handlers';
 
@@ -14,6 +17,9 @@ export const app: express.Application = express();
 
 //dont add type for this variable because it's already initialized with string value and typescript can
 const address = '0.0.0.0:3000';
+
+//use helmet, now it will work with it's default config, if I want to specify further more visit doc's
+app.use(helmet());
 
 app.use(bodyParser.json());
 
