@@ -10,19 +10,19 @@ jasmine.getEnv().clearReporters();
 jasmine.getEnv().addReporter(
   new SpecReporter({
     suite: {
-      displayNumber: true
+      displayNumber: true,
     },
     spec: {
       displayPending: false,
       displayDuration: false,
-      displayErrorMessages: true
+      displayErrorMessages: true,
     },
     summary: {
       displayDuration: true,
       displayFailed: true,
       displaySuccessful: false,
       displayPending: true,
-      displayErrorMessages: false
-    }
+      displayErrorMessages: false,
+    },
   })
 );

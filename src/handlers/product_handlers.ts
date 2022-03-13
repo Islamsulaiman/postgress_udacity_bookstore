@@ -53,7 +53,6 @@ const show = async (req: Request, res: Response): Promise<void> => {
 //create a route for delete() method;
 //this route takes a url parameter (id)
 const destroy = async (req: Request, res: Response): Promise<void> => {
-  
   try {
     const result: object = await product.delete(parseInt(req.params.id));
     res.json(result);
@@ -77,7 +76,7 @@ const create = async (req: Request, res: Response): Promise<void> => {
     const result = await product.create(productInfo);
     res.json(result);
   } catch (error) {
-    res.send("Check if the entered data is valid!")
+    res.send('Check if the entered data is valid!');
   }
 };
 

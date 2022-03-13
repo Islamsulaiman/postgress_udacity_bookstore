@@ -19,7 +19,12 @@ const errorMethod = (error: unknown) => {
 const indexUsers = async (_req: Request, res: Response) => {
   try {
     const result = await user.index();
-    res.json(result);
+    //we could pass (result) only to res.json() but we can pass an object with multiple elements which one of them will be the key and its value is (result)
+    res.json({
+      status: 'success',
+      data: result,
+      message: 'Users retrieved successfully',
+    });
   } catch (error) {
     throw errorMethod(error);
   }
@@ -28,18 +33,25 @@ const indexUsers = async (_req: Request, res: Response) => {
 const showUsers = async (req: Request, res: Response) => {
   try {
     const result = await user.show(parseInt(req.params.id));
-    res.json(result);
+    res.json({
+      status: 'success',
+      data: result,
+      message: 'Users retrieved successfully',
+    });
   } catch (error) {
     throw errorMethod(error);
   }
 };
 
 const destroyUsers = async (req: Request, res: Response) => {
-
   const token = getToken(req, res);
   try {
     const result = await user.destroy(token);
-    res.json(result);
+    res.json({
+      status: 'success',
+      data: result,
+      message: 'Users retrieved successfully',
+    });
   } catch (error) {
     throw errorMethod(error);
   }
@@ -55,7 +67,11 @@ const createUsers = async (req: Request, res: Response) => {
       age: req.body.age,
     };
     const result = await user.create(userInfo);
-    res.json(result);
+    res.json({
+      status: 'success',
+      data: result,
+      message: 'Users retrieved successfully',
+    });
   } catch (error) {
     throw errorMethod(error);
   }
@@ -68,12 +84,15 @@ const authenticateUser = async (req: Request, res: Response) => {
       req.body.user_name,
       req.body.password
     );
-    res.json(result);
+    res.json({
+      status: 'success',
+      data: result,
+      message: 'Users retrieved successfully',
+    });
   } catch (error) {
     throw errorMethod(error);
   }
 };
-
 
 //update will update the user data according to his entered data in the body
 const updateUserHandler = async (req: Request, res: Response) => {
@@ -88,17 +107,21 @@ const updateUserHandler = async (req: Request, res: Response) => {
   const token = getToken(req, res);
   try {
     const result = await user.update(userInfo, token);
-    res.json(result);
+    res.json({
+      status: 'success',
+      data: result,
+      message: 'Users retrieved successfully',
+    });
   } catch (error) {
     // res.send('make sure you input the correct user data and token!');
   }
 };
 
 export const usersRoutes = (app: express.Application) => {
-  app.get('/showAllUsers',authHeader , indexUsers);           //authenticate sensitive route
-  app.get('/showOneUser/:id', authHeader, showUsers);         //authenticate sensitive route
-  app.delete('/deleteUser',authHeader,  destroyUsers);        //authenticate sensitive route
+  app.get('/showAllUsers', authHeader, indexUsers); //authenticate sensitive route
+  app.get('/showOneUser/:id', authHeader, showUsers); //authenticate sensitive route
+  app.delete('/deleteUser', authHeader, destroyUsers); //authenticate sensitive route
   app.post('/createUser', createUsers);
   app.get('/authenticateUser', authenticateUser);
-  app.post('/updateUser',authHeader , updateUserHandler);     //authenticate sensitive route
+  app.post('/updateUser', authHeader, updateUserHandler); //authenticate sensitive route
 };

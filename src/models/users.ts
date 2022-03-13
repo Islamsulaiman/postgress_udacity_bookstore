@@ -10,7 +10,6 @@ dotenv.config();
 //import jwt method to create JWT with it
 import jwt, { Secret } from 'jsonwebtoken';
 
-
 //import bcrypt package to be used i n hashing and comparing passwords with hashed ones
 import bcrypt from 'bcrypt';
 
@@ -37,7 +36,7 @@ export type updateUsers = {
   l_name?: string;
   user_name?: string;
   age?: number;
-}
+};
 
 //use this method for error handling instead of copy past at every line.
 const errorMethod = (error: unknown) => {
@@ -72,13 +71,12 @@ export class Users_handler {
 
   //destroy() delete's the user info after the client provide us with the user token
   async destroy(token: string): Promise<Users> {
-    
     //decoded will return back the payload which is like this { user: { id: 4 }, iat: 1646849670 }.
-    const tokenPayload = jwt.verify(token,  process.env.TOKEN_PASS as string);
+    const tokenPayload = jwt.verify(token, process.env.TOKEN_PASS as string);
     //userId will try to access id object which is nested inside user key.
     //(tokenPayload as jwt.JwtPayload) will give us the access to payload even before it's created, because if we try to access it normally we cant because it's undefined now.
     // ".user.id" is trying to access id based on the structure of our payload which have user as a key then id object as value.
-    let userId = (tokenPayload as jwt.JwtPayload).user.id
+    let userId = (tokenPayload as jwt.JwtPayload).user.id;
     //we will use userId to access him on the DB
 
     try {
@@ -118,7 +116,7 @@ export class Users_handler {
 
       //This will return a token for this user, we can use it later to verify the user.
       const token = jwt.sign({ user: result.rows[0] }, TOKEN_PASS as Secret);
-      
+
       conn.release();
 
       return token;
@@ -132,30 +130,28 @@ export class Users_handler {
     user_name: string,
     password: string
   ): Promise<Users | null> {
-
     try {
       const conn = await client.connect();
       const sql = `SELECT password, id FROM users WHERE user_name = ($1); `;
-      console.log("auth 1")
+      console.log('auth 1');
 
       //result will contain an objet with two elements (password, id)
       const result = await conn.query(sql, [user_name]);
-      console.log(result.rows[0])
+      console.log(result.rows[0]);
 
       if (result.rows.length) {
-        const user = result.rows[0]
+        const user = result.rows[0];
 
-        console.log("auth 3")
-        console.log(user.id)
+        console.log('auth 3');
+        console.log(user.id);
 
-        //compareSync() is "bcrypt" method that return boolean if (user password + salt) = the hashed password from the DB 
+        //compareSync() is "bcrypt" method that return boolean if (user password + salt) = the hashed password from the DB
         const match = bcrypt.compareSync(
           password + BCRYPT_PASS,
           result.rows[0].password
-        );   
+        );
 
         if (match) {
-          
           return user.password;
         }
       }
@@ -172,13 +168,13 @@ export class Users_handler {
     //in this try/catch I check for every user attribute I can change if the user passed or not, if he passed this attribute then I append it to attribute array to be used as SQL parameters in "result" step and attach it to "innerSQL" which is the main part of our query that changes based on user input.
 
     //decoded will return back the payload which is like this { user: { id: 4 }, iat: 1646849670 }.
-    const tokenPayload = jwt.verify(token,  process.env.TOKEN_PASS as string);
+    const tokenPayload = jwt.verify(token, process.env.TOKEN_PASS as string);
     //userId will try to access id object which is nested inside user key.
     //(tokenPayload as jwt.JwtPayload) will give us the access to payload even before it's created, because if we try to access it normally we cant because it's undefined now.
     // ".user.id" is trying to access id based on the structure of our payload which have user as a key then id object as value.
-    let userId = (tokenPayload as jwt.JwtPayload).user.id
+    let userId = (tokenPayload as jwt.JwtPayload).user.id;
     //we will use userId to access him on the DB
-    
+
     try {
       const userAttributes = [];
       //we will add to that to be added to sql query
@@ -186,57 +182,53 @@ export class Users_handler {
       //counter will help with place holders number
       let count = 0;
 
-      if(u.f_name){
+      if (u.f_name) {
         //increment count, to be used with place holders
         count++;
         //push to "userAttributes" array, to be used later for sql parameter array
         userAttributes.push(u.f_name);
-        innerSql += 'f_name=$' + count + ','
+        innerSql += 'f_name=$' + count + ',';
       }
 
-      if(u.l_name){
+      if (u.l_name) {
         count++;
         userAttributes.push(u.l_name);
-        innerSql += 'l_name=$' + count + ','
+        innerSql += 'l_name=$' + count + ',';
       }
-      if(u.age){
+      if (u.age) {
         count++;
         userAttributes.push(u.age);
-        innerSql += 'age=$' + count + ','
+        innerSql += 'age=$' + count + ',';
       }
-      if(u.user_name){
+      if (u.user_name) {
         count++;
         userAttributes.push(u.user_name);
-        innerSql += 'user_name=$' + count + ','
+        innerSql += 'user_name=$' + count + ',';
       }
       //use slice() on innerSql  and give it start and end arg's to take all the chars except the last comma added after the last attribute the user added , because slice ignores the end index which is the comma.
       //we are forced to add this last comma at the because we dont know what is the added user attribute so we added it after all, then remove this comma from the final innerSql.
-      innerSql = innerSql.slice(0, innerSql.length-1)
+      innerSql = innerSql.slice(0, innerSql.length - 1);
 
       //to increment count for the id placeholder in our query.
       //make sure to pla ce this logic outside of if statement because it's not optional, there will always be id in our query
       count++;
 
       //this line to add WHERE clause for "id" and give it the incremented "count" placeholder, add space before WHERE to give space between placeholders and WHERE clause.
-      innerSql += ' WHERE id=$' + count ;
-      userAttributes.push(userId)  //userId we get from token
+      innerSql += ' WHERE id=$' + count;
+      userAttributes.push(userId); //userId we get from token
 
       //to check if the user at least want to update one attribute.
-      if(count >= 1){
-
+      if (count >= 1) {
         // pass innerSql inside the query, which contains all the user added args + WHERE clause.
         const sql = 'UPDATE users SET ' + innerSql + ' RETURNING *;';
         const conn = await client.connect();
         const result = await conn.query(sql, userAttributes);
         conn.release();
         return result.rows[0];
-      }else {
-        throw new Error(
-          `There is no data to update is provided`
-        );
+      } else {
+        throw new Error(`There is no data to update is provided`);
       }
       // const sql = `UPDATE users SET f_name = ($1), l_name = ($2), user_name = ($3), password = ($4), age = ($5) WHERE id = ($6) RETURNING *;`;
-      
     } catch (error) {
       throw errorMethod(error);
     }

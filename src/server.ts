@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
 
-//helmet package will hide a-lot of the response  data sent by the client to be more secure 
+//helmet package will hide a-lot of the response  data sent by the client to be more secure
 import helmet from 'helmet';
 
 //import route handlers

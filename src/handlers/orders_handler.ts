@@ -42,7 +42,6 @@ const showOneOrder = async (req: Request, res: Response) => {
 
 //to handle creating new orders for the user to add products to them later
 const createOrderHandler = async (req: Request, res: Response) => {
-
   try {
     //we only need user_id to attach the order to, status of order is default to "open".
     const result = await orders.create(parseInt(req.params.id));
@@ -74,18 +73,16 @@ const userDashboard = async (req: Request, res: Response) => {
     const result = await services.userDashboard(parseInt(req.params.id));
     res.json(result);
   } catch (error) {
-        res.send(
+    res.send(
       'please make sure that this user have an open order with products in it !!'
     );
   }
-}
-
-
+};
 
 export const ordersRoute = (app: express.Application) => {
-  app.get('/showAllOrders',authHeader , showAllOrders);
-  app.get('/showOneOrder/:id',authHeader, showOneOrder);
-  app.post('/createOrder/:id',authHeader, createOrderHandler);
-  app.post('/addToOrder/:id/product',authHeader, addProductToOrder);
-  app.get("/userDashboard/:id",authHeader,  userDashboard)
+  app.get('/showAllOrders', authHeader, showAllOrders);
+  app.get('/showOneOrder/:id', authHeader, showOneOrder);
+  app.post('/createOrder/:id', authHeader, createOrderHandler);
+  app.post('/addToOrder/:id/product', authHeader, addProductToOrder);
+  app.get('/userDashboard/:id', authHeader, userDashboard);
 };
