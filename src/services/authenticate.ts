@@ -1,5 +1,5 @@
 // // this file will contain all the authentication models
-import { Response, Request } from 'express';
+import { Response, Request, NextFunction } from 'express';
 
 //import jwt to check tokens before create new books.
 import jwt from 'jsonwebtoken';
@@ -43,7 +43,7 @@ export const getToken = (req: Request, res: Response) =>  {
 
 
 //'auth' is a middleware that requires token from the user to invoke certain sensitive routes that, we get the token straight from headers object, without the need of the user providing any thing to
-export const authHeader = (req: Request, res: Response, next: Function) => {
+export const authHeader = (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = getToken(req, res);
     //.verify() returns true or false

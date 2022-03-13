@@ -21,6 +21,7 @@ const address = '0.0.0.0:3000';
 //use helmet, now it will work with it's default config, if I want to specify further more visit doc's
 app.use(helmet());
 
+//bodyParser.json() is used to parse the post request body, we can also use express.json() instead because bodyParser is included inside express now
 app.use(bodyParser.json());
 
 app.get('/', function (req: Request, res: Response) {
