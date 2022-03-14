@@ -27,7 +27,7 @@ export const auth = (req: Request, res: Response, next: Function) => {
 };
 
 //this function gets the embedded token from within the "req.headers.authorization" object sent by the client header, then return it to the API so we can use the token to verify the user.
-export const getToken = (req: Request, res: Response) => {
+export const getToken = (req: Request, _res: Response) => {
   //"authorizationHeader" gets the value of key "authorization" sent by "headers" object which is sent by the client and part of the request object.
   //better understanding in this video "https://www.youtube.com/watch?v=Ku3eJnOfmIo"
   const authorizationHeader = req.headers.authorization as string;
