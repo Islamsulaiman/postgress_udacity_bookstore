@@ -40,8 +40,10 @@ describe('Test that every model inside usersModel is defined', () => {
   });
 });
 
+let token: string;
+
 //in this suite will test user behavior models.
-describe('test create user logic', () => {
+describe('test user CRUD operations logic', () => {
 
   //create user object that we will pass to create method like the body we send via postman, should match the real model.
   const userObject: Users = {
@@ -56,6 +58,9 @@ describe('test create user logic', () => {
   beforeAll(async() =>{
     //using create method and the object we created as an argument for create model which takes user info as an object.
     const newUser = await user.create(userObject);
+
+    //token variable will contain the return of create() which is the user token.
+    token = newUser
   }) 
 
   //this will help us delete the table and make it ready for the rest of tests inside this file and others because they are all conducted on the same DB and tables 
@@ -75,12 +80,48 @@ describe('test create user logic', () => {
     conn.release();
   })
 
-  it("user should be created under id 1",async ()=>{
+  it("user should be created",async ()=>{
 
     //now we are testing show() model that returns one user with id no.1 , that's why we altered the sequence because we depend on it in our tests
     const showOneUser = await user.show(1)
+
+    //this line doesn't have any functionality, just to learn that if Iam using UUID instead of serial id that I can store it at my userObject so I can access it later to select this specific user.
+    userObject.id = showOneUser.id
+
     //AFTER THE USER we created BEEN returned, we can expect the values we entered to be true like age. 
     expect(showOneUser.age).toBe(20);
+    expect(showOneUser.f_name).toBe("f_name test");
+    expect(showOneUser.l_name).toBe("l_name test");
+    expect(showOneUser.user_name).toBe("user_name test");
+  })
+
+  it("Authenticate user returns correct response", async ()=>{
+    const auth = await user.authenticate("user_name test", "test pass");
+    
+    //if user_name and password is correct, authenticate should return string "your input data is correct" 
+    expect(auth).toBe("your input data is correct")
+  })
+  it("test Authenticate() if the user input wrong user_name or password", async()=>{
+    const auth = await user.authenticate("wrong user_name", "wrong test pass");
+    
+    //if user_name and password is wrong, authenticate should return null
+    expect(auth).toBe(null)
+  })
+  it("index() should return all the users inside table without any arguments", async()=>{
+    const indexUsers = await user.index();
+    expect(indexUsers[0].age).toBe(20);
+    expect(indexUsers[0].f_name).toBe("f_name test");
+    expect(indexUsers[0].l_name).toBe("l_name test");
+    expect(indexUsers[0].user_name).toBe("user_name test");
+  })
+  it("destroy() should delete specific user ", async()=>{
+    //this line will delete the only user we created previously
+    const deleteUser = await user.destroy(token)
+
+    //use index()method to check for all the users, since we just deleted our only user then indexUsers array length should be zero
+    const indexUsers = await user.index();
+
+    expect(indexUsers.length).toBe(0);
   })
 
 });
