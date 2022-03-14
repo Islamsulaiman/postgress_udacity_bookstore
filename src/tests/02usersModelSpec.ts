@@ -114,14 +114,14 @@ describe('test user CRUD operations logic', () => {
     expect(indexUsers[0].l_name).toBe("l_name test");
     expect(indexUsers[0].user_name).toBe("user_name test");
   })
-  it("destroy() should delete specific user ", async()=>{
+  it("user.destroy() should delete specific user ", async()=>{
     //this line will delete the only user we created previously
     const deleteUser = await user.destroy(token)
 
     //use index()method to check for all the users, since we just deleted our only user then indexUsers array length should be zero
     const indexUsers = await user.index();
 
-    expect(indexUsers.length).toBe(0);
+    expect(indexUsers.length).toEqual(0);
   })
 
 });

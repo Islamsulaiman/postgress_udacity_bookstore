@@ -57,14 +57,22 @@ describe("test order Models CRUD operations logic",()=>{
   afterAll(async()=>{
     const conn = await client.connect();
 
-    const dropOrdersTable = "DROP TABLE IF EXISTS orders CASCADE;"
-    // const deleteOrders = "DELETE FROM orders;"
-    const SQLDeleteUsers = "DELETE FROM users;";
-    const SQLAlterSequence = "ALTER SEQUENCE users_id_seq RESTART WITH 1;";
+    const SQLDeleteOrders = "DELETE FROM orders;";
+    const SQLDeleteUsers = "DELETE FROM users CASCADE;";
+    const SQLAlterUsersSequence = "ALTER SEQUENCE users_id_seq RESTART WITH 1;";
+    const SQLAlterOrdersSequence = "ALTER SEQUENCE orders_id_seq RESTART WITH 1;"
 
-    const dropOrders = await conn.query(dropOrdersTable);
+    //Alter the sequence of order id back to 1 after deleting the exiting to ensure new test will start from id =1
+    const alterOrdersResult = await conn.query(SQLAlterOrdersSequence);
+
+    //delete all orders inside the table to start fresh
+    const deleteOrders = await conn.query(SQLDeleteOrders);
+
+    //delete and alter user sequences and users
     const deleteResult = await conn.query(SQLDeleteUsers);
-    const alterResult = await conn.query(SQLAlterSequence);
+    const alterResult = await conn.query(SQLAlterUsersSequence);
+
+    conn.release()
   })
   it("test create new order", async()=>{
     //order.creat() take user.id to create new order for him, since we created one test user then user id =1
@@ -73,6 +81,7 @@ describe("test order Models CRUD operations logic",()=>{
 
     //order status defaults to "open"
     expect(createNewOrder.status).toBe("open")
-    expect(createNewOrder.user_id).toBe(1)
+    console.log(typeof(createNewOrder.user_id))
+    expect(createNewOrder.id).toEqual(1)
   })
 })
