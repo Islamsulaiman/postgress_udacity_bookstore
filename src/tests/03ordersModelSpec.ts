@@ -60,7 +60,7 @@ describe("test order Models CRUD operations logic",()=>{
     const SQLDeleteOrders = "DELETE FROM orders;";
     const SQLDeleteUsers = "DELETE FROM users CASCADE;";
     const SQLAlterUsersSequence = "ALTER SEQUENCE users_id_seq RESTART WITH 1;";
-    const SQLAlterOrdersSequence = "ALTER SEQUENCE orders_id_seq RESTART WITH 1;"
+    const SQLAlterOrdersSequence = "ALTER SEQUENCE orders_id_seq RESTART WITH 1;";
 
     //Alter the sequence of order id back to 1 after deleting the exiting to ensure new test will start from id =1
     const alterOrdersResult = await conn.query(SQLAlterOrdersSequence);
@@ -69,8 +69,8 @@ describe("test order Models CRUD operations logic",()=>{
     const deleteOrders = await conn.query(SQLDeleteOrders);
 
     //delete and alter user sequences and users
-    const deleteResult = await conn.query(SQLDeleteUsers);
     const alterResult = await conn.query(SQLAlterUsersSequence);
+    const deleteResult = await conn.query(SQLDeleteUsers);
 
     conn.release()
   })
