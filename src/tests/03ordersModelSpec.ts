@@ -81,7 +81,22 @@ describe("test order Models CRUD operations logic",()=>{
 
     //order status defaults to "open"
     expect(createNewOrder.status).toBe("open")
-    console.log(typeof(createNewOrder.user_id))
+    //make sure of order id 
     expect(createNewOrder.id).toEqual(1)
   })
+  it("orders.index() show all orders", async()=> {
+
+    //orders.index() returns array of objects, each object is a row from table.
+    const showAllOrders = await order.index();
+    expect(showAllOrders[0].status).toEqual("open")
+  })
+  it("orders.show() returns a specific order", async()=>{
+
+    //try to show the 1st order that we created previously
+    const showOneOrder = await order.show(1)
+
+    //make sure that the method works fine
+    expect(showOneOrder.status).toEqual("open")
+  })
+
 })
