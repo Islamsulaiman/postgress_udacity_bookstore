@@ -84,5 +84,5 @@ export const ordersRoute = (app: express.Application) => {
   app.get('/showOneOrder/:id', authHeader, showOneOrder);
   app.post('/createOrder/:id', authHeader, createOrderHandler);
   app.post('/addToOrder/:id/product', authHeader, addProductToOrder);
-  app.get('/userDashboard/:id', authHeader, userDashboard);
+  app.get('/userDashboard/:id', userDashboard);
 };

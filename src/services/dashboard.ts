@@ -17,10 +17,11 @@ export class serviceMethods {
         INNER JOIN orders ON users.id = orders.user_id 
         INNER JOIN orders_products on orders.id = orders_products.order_id 
         INNER JOIN product ON orders_products.product_id = product.id 
-        WHERE users.id = $1 ORDER BY orders_products.quantity;`;
+        WHERE users.id = ($1) ORDER BY orders_products.quantity;`;
 
       const result = await conn.query(sql, [id]);
       conn.release();
+      console.log(result.rows)
       return result.rows[0];
     } catch (error) {
       throw errorMethod(error);

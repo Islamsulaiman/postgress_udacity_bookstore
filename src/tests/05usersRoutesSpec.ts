@@ -30,7 +30,7 @@ describe("test user routes logic", ()=>{
         const conn = await client.connect();
 
         const SQLDeleteUsers = 'DELETE FROM users;';
-        const SQLAlterSeq = 'ALTER SEQUENCE users_id_seq RESTART WITH 1;'
+        const SQLAlterSeq = 'ALTER SEQUENCE users_id_seq RESTART WITH 1;';
 
         const alterSeq = await conn.query(SQLAlterSeq);
         const deleteUsers = await conn.query(SQLDeleteUsers);
