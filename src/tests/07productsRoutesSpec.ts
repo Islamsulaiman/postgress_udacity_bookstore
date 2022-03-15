@@ -120,22 +120,37 @@ describe("Test product routes logic", ()=>{
         expect(res.body.category).toEqual("test category")
 
     })
-    it("orders_handler.addToOrder() methods adds row inside orders_products table to be used later in dashboard() model", async()=>{
+
+
+    it("/deleteProduct/:id deletes specific product", async()=>{
+        const res = await request
+        .delete("/deleteProduct/1")
+        .set("Content-Type", "application/json") 
+        .set('Authorization', `Bearer ${token}`)
+
+        expect(res.body.name).toEqual("test product")
+        expect(res.body.price).toEqual(100)
+        expect(res.body.category).toEqual("test category")
+    })
+
+      it("orders_handler.addToOrder() methods adds row inside orders_products table to be used later in dashboard() model", async()=>{
+
+        //create new product because we deleted our only on at the previous step and we need one at least to add new row at orders_products table
+        //note that the new product will be at id = 2, because the product sequence is not altered yet
+        const secondProduct = await product.create(productObject)
+
+        //add + 1 to product id , because this is the second product
         const newOrders_products = await order.addToOrder(
-            newOrdersProducts.order_id, newOrdersProducts.product_id, newOrdersProducts.quantity
-        )
+            newOrdersProducts.quantity, newOrdersProducts.order_id, newOrdersProducts.product_id + 1
+        );
+
+        expect(parseInt(newOrders_products.order_id as unknown as string)).toEqual(1)
+        expect(parseInt(newOrders_products.product_id as unknown as string)).toEqual(2)
+        expect(newOrders_products.quantity).toEqual(2)
     })
 
     //this route returns all orders data for specific user
     it("'/userDashboard/:id route returns all order details for specific user", async()=>{
-
-        // //before we can't test this route before we create an instance inside orders_products table to work inside the join table we are creating inside serviceMethods.userDashboard()
-        // const conn = await client.connect();
-        // const SQLDashboard = 'INSERT INTO orders_products (quantity, order_id, product_id) VALUES ($1, $2, $3);';
-        
-        // // (quantity, order_id, product_id)
-        // const result = conn.query(SQLDashboard, [2, 1,1]);
-        // conn.release()
 
         //after we created the instance inside orders_products, now we can test our dashboard.
         const res = await request
@@ -145,19 +160,13 @@ describe("Test product routes logic", ()=>{
         .set('Authorization', `Bearer ${token}`)    
         
         expect(parseInt(res.body.user_id)).toEqual(1)
-
-    })
-
-    it("/deleteProduct/:id deletes specific product", async()=>{
-        const res = await request
-        .delete("/deleteProduct/1")
-        .set("Content-Type", "application/json") 
-        .set('Authorization', `Bearer ${token}`)
-
-        console.log(res.body)
-        expect(res.body.name).toEqual("test product")
-        expect(res.body.price).toEqual(100)
-        expect(res.body.category).toEqual("test category")
+        expect(res.body.user_name).toEqual("user_name test")
+        expect(res.body.order_status).toEqual("open")
+        expect(res.body.order_id).toEqual(1)
+        expect(parseInt(res.body.product_id as string)).toEqual(2)
+        expect(res.body.product_name).toEqual("test product")
+        expect(res.body.product_name).toEqual("test product")
+        expect(res.body.product_quantity).toEqual(2)
     })
 
 

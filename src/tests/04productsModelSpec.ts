@@ -53,6 +53,7 @@ describe("test product models CRUD operations logic", ()=>{
 
     //create test order with test user id
     const newOrder = await order.create(1)
+
   });
 
   afterAll(async()=>{
@@ -98,34 +99,40 @@ describe("test product models CRUD operations logic", ()=>{
     expect(showAllProducts[0].name).toEqual("test product");
     expect(showAllProducts[0].category).toEqual("test category");
 
-    //instead of hardcoding the target value we can access the value we gave the product test object "productObject" by calling the key
+    //instead of hard coding the target value we can access the value we gave the product test object "productObject" by calling the key
     expect(showAllProducts[0].price).toEqual(productObject.price)
   })
   it("product.show() show one specific product", async()=>{
     //pass specific product id to get
     const showOneProduct = await product.show(1)
 
-    //instead of hardcoding the target value we can access the value we gave the product test object "productObject" by calling the key
+    //instead of hard coding the target value we can access the value we gave the product test object "productObject" by calling the key
     expect(showOneProduct.name).toEqual(productObject.name)
     expect(showOneProduct.price).toEqual(productObject.price)
     expect(showOneProduct.category).toEqual(productObject.category)
   })
-  // it("order.addToOrder() adds product to an open order by user", async()=>{
 
-  //   //addToOrder takes 1)product quantity 2) product_id 3) order_id
-  //   const addProductToOrder = await order.addToOrder(1,1,1)
-  //   expect(addProductToOrder.quantity).toEqual(1)
-  //   expect(addProductToOrder.product_id).toEqual(1)
-  //   expect(addProductToOrder.order_id).toEqual(1)
-  // })
   it("product.delete() deletes the product with the id", async()=>{
 
     //delete take product id
     const deleteOneProduct = await product.delete(1)
 
-    //instead of hardcoding the target value we can access the value we gave the product test object "productObject" by calling the key
+    //instead of hard coding the target value we can access the value we gave the product test object "productObject" by calling the key
     expect(deleteOneProduct.name).toEqual(productObject.name)
     expect(deleteOneProduct.price).toEqual(productObject.price)
-    expect(deleteOneProduct.category).toEqual(productObject.category)  })
+    expect(deleteOneProduct.category).toEqual(productObject.category)  
+  })
+    it("order.addToOrder() adds product to an open order by user", async()=>{
+    
+    //create new product because we deleted our only on at the previous step and we need one at least to add new row at orders_products table
+    //note that the new product will be at id = 2, because the product sequence is not altered yet
+    const newProduct = await product.create(productObject);
+
+    //addToOrder takes 1)product quantity 2) order_id 3) product_id
+    const addProductToOrder = await order.addToOrder(1,1,2)
+    expect(parseInt(addProductToOrder.quantity as unknown as string)).toEqual(1)
+    expect(parseInt(addProductToOrder.product_id as unknown as string)).toEqual(2)
+    expect(parseInt(addProductToOrder.order_id as unknown as string)).toEqual(1)
+  })
 
 })
