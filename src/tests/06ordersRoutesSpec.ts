@@ -80,18 +80,6 @@ describe("Test order routes logic", ()=>{
         //index into body because /showAllOrders returns array of objects
         expect(parseInt(res.body.user_id)).toEqual(1)    
     })
-
-    // //move to products route
-    // it("'/userDashboard/:id route returns all order details for specific user", async()=>{
-    //     const res = await request
-    //     //get orders info for user with id = 1 
-    //     .get("/userDashboard/1")
-    //     .set("Content-Type", "application/json")
-    //     .set('Authorization', `Bearer ${token}`)    
-        
-    //     console.log(res.body)
-    //     expect(parseInt(res.body.user_id)).toEqual(1)
-    // })
     
 })
 

@@ -21,7 +21,6 @@ export class serviceMethods {
 
       const result = await conn.query(sql, [id]);
       conn.release();
-      console.log(result.rows)
       return result.rows[0];
     } catch (error) {
       throw errorMethod(error);
