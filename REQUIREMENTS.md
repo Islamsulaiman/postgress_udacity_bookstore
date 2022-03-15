@@ -14,7 +14,7 @@ steps of using all functionality using postman
 ### User functionality
 
 1. to create user :
-   a. access (http://localhost:3000/createUser) as POST HTTP
+   a. access (http://localhost:3000/createUser) as POST HTTP  
    b. provide new user info as json body then send, like:
    {
    "f_name" : "test",
