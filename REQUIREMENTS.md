@@ -130,4 +130,45 @@ id SERIAL PRIMARY KEY,
 status VARCHAR(15) DEFAULT 'open',
 user_id BIGINT REFERENCES users(id) NOT NULL
 
-1.
+1. Create order:
+
+   a. access (http://localhost:3000/createOrder/:id) as POST HTTP , <id> is for the user
+   b. dos'nt need body to be sent
+   c. order info will be returned.
+   d. you should be logged in
+   e. order() opens new order for specific user.
+
+2. Show all orders:
+
+   a. access (http://localhost:3000/showAllOrders) as GET HTTP
+   b. this will return all the orders for all users.
+   d. you should be logged in
+
+3. Show one order:
+
+   a. access (http://localhost:3000/showOneOrder/:id) as GET HTTP, EX => <http://localhost:3000//showOneOrder/3> , id is the order id inside the DB.
+   b. You will be provided with the specific order data.
+   d. you should be logged in
+
+4. Add new order product relation inside orders_products table:
+
+   a. access (http://localhost:3000/addToOrder/:id/product) as POST HTTP , <id> is for the user
+   b. provide orders_products data as json body then send, like:
+   {
+   "order_id" : 1,
+   "product_id" : 1,
+   "quantity" : 10"
+   }
+   c. orders_products info will be returned.
+   d. you should be logged in
+   e. this table will help us connect between users and their orders and products inside these orders.
+
+## Steps order to use the API
+
+1. Create new user, then keep the returned token.
+2. login by adding your token into postman => Authorization => Bearer Token => insert your token inside token box.
+3. create new product.
+4. create new order.
+5. create new orders_products relation.
+6. View user dashboard by accessing (http://localhost:3000//userDashboard/:id) while id is the user id we want to access, to see all of our oder details.
+7. feel free to update or delete users, products and orders as you like (:
