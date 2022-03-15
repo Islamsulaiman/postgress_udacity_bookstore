@@ -76,7 +76,7 @@ export class Users_handler {
     //userId will try to access id object which is nested inside user key.
     //(tokenPayload as jwt.JwtPayload) will give us the access to payload even before it's created, because if we try to access it normally we cant because it's undefined now.
     // ".user.id" is trying to access id based on the structure of our payload which have user as a key then id object as value.
-    let userId = (tokenPayload as jwt.JwtPayload).user.id;
+    const userId = (tokenPayload as jwt.JwtPayload).user.id;
     //we will use userId to access him on the DB
 
     try {
@@ -169,7 +169,7 @@ export class Users_handler {
     //userId will try to access id object which is nested inside user key.
     //(tokenPayload as jwt.JwtPayload) will give us the access to payload even before it's created, because if we try to access it normally we cant because it's undefined now.
     // ".user.id" is trying to access id based on the structure of our payload which have user as a key then id object as value.
-    let userId = (tokenPayload as jwt.JwtPayload).user.id;
+    const userId = (tokenPayload as jwt.JwtPayload).user.id;
     //we will use userId to access him on the DB
 
     try {

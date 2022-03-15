@@ -9,7 +9,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 //'auth' is a middleware that requires token from the user to invoke certain sensitive routes that
-export const auth = (req: Request, res: Response, next: Function) => {
+export const auth = (req: Request, res: Response, next: NextFunction) => {
   try {
     //.verify() returns true or false
     jwt.verify(req.body.token, process.env.TOKEN_PASS as string);

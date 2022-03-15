@@ -10,15 +10,6 @@ import client from '../database';
 //create an instance from the class to be able to test it's methods and return functions
 const user = new Users_handler();
 
-//supertest to test HTTP requests
-import supertest from 'supertest';
-
-// we will pass app object to supertest() method so we can access HTTP requests req and res
-import { app } from '../server';
-
-//pass app to supertest()
-const requestUserModels = supertest(app);
-
 describe('Test that every model inside usersModel is defined', () => {
   it('user.index is defined', () => {
     expect(user.index).toBeDefined();

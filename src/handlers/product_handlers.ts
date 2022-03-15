@@ -1,24 +1,18 @@
 //import SQL methods class to destructure it later and the type
 import { Product, Product_handlers } from '../models/product';
 
-//getToken() get and parse the token from request header so we can use token to verify user.
-import { getToken } from '../services/authenticate';
-
 //import auth middleware, to authenticate user using tokens before invoking certain sensitive routes
-import { authHeader, auth } from '../services/authenticate';
+import { authHeader } from '../services/authenticate';
 
 //import express;
 import express, { Request, Response } from 'express';
-
-//import jwt to check tokens before create new books.
-import jwt from 'jsonwebtoken';
 
 //import dotenv and initialize
 import dotenv from 'dotenv';
 dotenv.config();
 
 //create an instance of Book_handlers class
-let product = new Product_handlers();
+const product = new Product_handlers();
 
 //use this method for error handling instead of copy past at every line.
 const errorMethod = (error: unknown) => {

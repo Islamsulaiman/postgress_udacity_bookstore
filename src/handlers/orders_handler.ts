@@ -1,5 +1,5 @@
 // // this file will handle all of the orders methods to the target route
-import { Orders, orders_handler } from '../models/orders';
+import { orders_handler } from '../models/orders';
 
 //this class contains userDashboard which returns all the order and product information's about a specific user.
 import { serviceMethods } from '../services/dashboard';
@@ -8,7 +8,7 @@ import { serviceMethods } from '../services/dashboard';
 const orders = new orders_handler();
 
 //import auth middleware, to authenticate user using tokens before invoking certain sensitive routes
-import { authHeader, auth } from '../services/authenticate';
+import { authHeader } from '../services/authenticate';
 
 //create an instance of serviceMethods to access all it's methods using the instance.
 const services = new serviceMethods();

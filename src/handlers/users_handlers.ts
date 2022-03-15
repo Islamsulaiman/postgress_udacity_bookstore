@@ -8,7 +8,7 @@ const user = new Users_handler();
 import express, { Request, Response } from 'express';
 
 //import authentication method for restricted routes
-import { authHeader, auth } from '../services/authenticate';
+import { authHeader } from '../services/authenticate';
 
 //use this method for error handling instead of copy past at every line.
 const errorMethod = (error: unknown) => {
