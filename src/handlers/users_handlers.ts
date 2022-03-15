@@ -90,7 +90,7 @@ const authenticateUser = async (req: Request, res: Response) => {
       message: 'User retrieved successfully',
     });
   } catch (error) {
-    res.send("Check your input data!")
+    res.send('Check your input data!');
   }
 };
 

@@ -149,7 +149,7 @@ export class Users_handler {
         );
 
         if (match) {
-          return "your input data is correct";
+          return 'your input data is correct';
         }
       }
       return null;
@@ -160,7 +160,6 @@ export class Users_handler {
 
   //method to update user info after passing user new data and the token in the body, but this method will not update the password
   async update(u: updateUsers, token: string): Promise<Users> {
-
     // Eng: Tarek El-Barody  helped me with this idea of optional update method.
     //I want to give the user the ability to update only the attributes he want to update, so I need to create SQL query that changes based on user input .
     //in this try/catch I check for every user attribute I can change if the user passed or not, if he passed this attribute then I append it to attribute array to be used as SQL parameters in "result" step and attach it to "innerSQL" which is the main part of our query that changes based on user input.

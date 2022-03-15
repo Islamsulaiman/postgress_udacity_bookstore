@@ -12,8 +12,6 @@ import { serviceMethods } from '../services/dashboard';
 //to connect with DB
 import client from '../database';
 
-
-
 //create an instance from the class to be able to test it's methods and return functions
 const order = new orders_handler();
 const service = new serviceMethods();
@@ -37,30 +35,30 @@ describe('Test that every model inside orderModel is defined', () => {
   });
 });
 
-describe("test order Models CRUD operations logic",()=>{
-
+describe('test order Models CRUD operations logic', () => {
   //create user object that we will pass to create method like the body we send via postman, should match the real model.
   const userObject: Users = {
-    f_name : "f_name test",
-    l_name: "l_name test",
-    user_name: "user_name test",
-    password: "test pass",
+    f_name: 'f_name test',
+    l_name: 'l_name test',
+    user_name: 'user_name test',
+    password: 'test pass',
     age: 20,
-  }
-  //create test user beforeAll tests  
-  beforeAll(async()=>{
+  };
+  //create test user beforeAll tests
+  beforeAll(async () => {
     //this line will create test user for us.
     const newUser = await user.create(userObject);
-  })
+  });
 
   //delete all created users and alter their id sequences
-  afterAll(async()=>{
+  afterAll(async () => {
     const conn = await client.connect();
 
-    const SQLDeleteOrders = "DELETE FROM orders;";
-    const SQLDeleteUsers = "DELETE FROM users CASCADE;";
-    const SQLAlterUsersSequence = "ALTER SEQUENCE users_id_seq RESTART WITH 1;";
-    const SQLAlterOrdersSequence = "ALTER SEQUENCE orders_id_seq RESTART WITH 1;";
+    const SQLDeleteOrders = 'DELETE FROM orders;';
+    const SQLDeleteUsers = 'DELETE FROM users CASCADE;';
+    const SQLAlterUsersSequence = 'ALTER SEQUENCE users_id_seq RESTART WITH 1;';
+    const SQLAlterOrdersSequence =
+      'ALTER SEQUENCE orders_id_seq RESTART WITH 1;';
 
     //Alter the sequence of order id back to 1 after deleting the exiting to ensure new test will start from id =1
     const alterOrdersResult = await conn.query(SQLAlterOrdersSequence);
@@ -72,31 +70,28 @@ describe("test order Models CRUD operations logic",()=>{
     const alterResult = await conn.query(SQLAlterUsersSequence);
     const deleteResult = await conn.query(SQLDeleteUsers);
 
-    conn.release()
-  })
-  it("test create new order", async()=>{
+    conn.release();
+  });
+  it('test create new order', async () => {
     //order.creat() take user.id to create new order for him, since we created one test user then user id =1
     //order.creat() returns an object of the order details
-    const createNewOrder = await order.create(1) 
+    const createNewOrder = await order.create(1);
 
     //order status defaults to "open"
-    expect(createNewOrder.status).toBe("open")
-    //make sure of order id 
-    expect(createNewOrder.id).toEqual(1)
-  })
-  it("orders.index() show all orders", async()=> {
-
+    expect(createNewOrder.status).toBe('open');
+    //make sure of order id
+    expect(createNewOrder.id).toEqual(1);
+  });
+  it('orders.index() show all orders', async () => {
     //orders.index() returns array of objects, each object is a row from table.
     const showAllOrders = await order.index();
-    expect(showAllOrders[0].status).toEqual("open")
-  })
-  it("orders.show() returns a specific order", async()=>{
-
+    expect(showAllOrders[0].status).toEqual('open');
+  });
+  it('orders.show() returns a specific order', async () => {
     //try to show the 1st order that we created previously
-    const showOneOrder = await order.show(1)
+    const showOneOrder = await order.show(1);
 
     //make sure that the method works fine
-    expect(showOneOrder.status).toEqual("open")
-  })
-
-})
+    expect(showOneOrder.status).toEqual('open');
+  });
+});
