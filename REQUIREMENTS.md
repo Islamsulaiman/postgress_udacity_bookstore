@@ -13,18 +13,18 @@ steps of using all functionality using postman
 
 ### User functionality
 
-1. to create user :
+1. to create user :  
    a. access (http://localhost:3000/createUser) as POST HTTP  
-   b. provide new user info as json body then send, like:
+   b. provide new user info as json body then send, like:  
    {
    "f_name" : "test",
    "l_name" : "test",
    "user_name" : "test",
    "password" : "pass",
    "age" : 50
-   }
-   c. You will receive back your user token , this is your key for every functionality throw the API, so keep it safe.
-   d. now you are a valid user (:
+   }  
+   c. You will receive back your user token , this is your key for every functionality throw the API, so keep it safe.  
+   d. now you are a valid user (:  
 
 2. Login user with token to be able to access sensitive routes:
 
